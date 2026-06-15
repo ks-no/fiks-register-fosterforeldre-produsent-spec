@@ -129,6 +129,10 @@
                     "description": "Dato hendelsen inntraff.",
                     "example": "2026-06-01"
                   },
+                  "referanseId": {
+                    "type": "string",
+                    "description": "Avsenders egen referanse, returneres uendret på tilbakemeldinger."
+                  },
                   "merknad": {
                     "type": "string"
                   },
@@ -329,6 +333,10 @@
       "Tilbakemelding": {
         "type": "object",
         "properties": {
+          "referanseId": {
+            "type": "string",
+            "description": "Avsenders egen referanse, sendt inn på mottak."
+          },
           "tittel": {
             "type": "string",
             "example": "Hendelse i sak"
