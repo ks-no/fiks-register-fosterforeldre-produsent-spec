@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meldingOmEndringAvOmsorgsansvar xmlns="folkeregisteret:melding:meldingomendringavomsorgsansvar:v1">
+    <innsending>
+        <avsendersMeldingsidentifikator>MSG-2026-ENDRE-0001</avsendersMeldingsidentifikator>
+        <avsendersInnsendingstidspunkt>2026-09-07T11:30:00+02:00</avsendersInnsendingstidspunkt>
+        <!-- Optional in the PDF description, but required by the current XSD. -->
+        <kildesystem>FosterSystem</kildesystem>
+    </innsending>
+    <forespoersel>
+        <avsendersSaksreferanse>SAK-2026-ENDRE-0001</avsendersSaksreferanse>
+        <forespoerseltype>endre</forespoerseltype>
+        <!-- For "endre", this is the date the registration is valid from. -->
+        <gyldighetsdato>2026-09-01</gyldighetsdato>
+        <!-- The XSD allows multiple innsender entries (maxOccurs="unbounded"). -->
+        <innsender>
+            <innsendertype>barnevernstjenesten</innsendertype>
+            <navnPaaBarnevernstjenesten>Oslo barnevernstjeneste</navnPaaBarnevernstjenesten>
+            <barnevernstjeneste>123456789</barnevernstjeneste>
+        </innsender>
+        <innsender>
+            <innsendertype>barnevernstjenesten</innsendertype>
+            <navnPaaBarnevernstjenesten>Bergen barnevernstjeneste</navnPaaBarnevernstjenesten>
+            <barnevernstjeneste>987654321</barnevernstjeneste>
+        </innsender>
+        <mottak>
+            <mottakstidspunktFraOpprinneligKanal>2026-09-07</mottakstidspunktFraOpprinneligKanal>
+            <informasjonskanal>elektroniskMelding</informasjonskanal>
+        </mottak>
+        <barn>
+            <foedselsEllerDNummer>01010112345</foedselsEllerDNummer>
+        </barn>
+        <forelder>
+            <foedselsEllerDNummer>02020223456</foedselsEllerDNummer>
+        </forelder>
+        <barnevernstjeneste>
+            <ansvarligBarnevernstjeneste>111222333</ansvarligBarnevernstjeneste>
+        </barnevernstjeneste>
+    </forespoersel>
+</meldingOmEndringAvOmsorgsansvar>
+
+
