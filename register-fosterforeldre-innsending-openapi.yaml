@@ -1,0 +1,723 @@
+openapi: 3.0.3
+info:
+  title: Fosterforeldre Omsorgsansvar Innsending API
+  version: v1
+  description: >-
+    Brukervennlig JSON API for innsending av meldinger om endring av
+    omsorgsansvar, med asynkron tilbakemelding via polling. Payloaden er
+    domenetilpasset og skjuler intern XML/XSD-struktur.
+
+
+    Foresporselstyper:
+
+    - Endre: Registrere ny oppforing med informasjon og tilhorende metadata i
+    Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist.
+
+    - Opphoere: Avslutte gyldighetsperioden for en oppforing i Folkeregisteret
+    ved a sette opphorstidspunktet i de tilhorende metadataene.
+
+    - Korrigere: Bytte ut informasjon eller metadata pa en eksisterende
+    oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt
+    tilsvarende tidspunktet for korrigeringen.
+
+    - Annullere: Fjerne en oppforing med informasjon og tilhorende metadata slik
+    at det ikke lenger vises i Folkeregisteret at informasjonen har vaert
+    registrert. Informasjonen har aldri vaert gyldig.
+
+    - Overfoere: Ansvaret for et fosterbarn overfores fra en barnevernstjeneste
+    til en annen.
+servers:
+  - url: https://api.test.fiks.ks.no
+    description: Test
+  - url: https://api.fiks.ks.no
+    description: Produksjon
+security:
+  - bearerAuth: []
+tags:
+  - name: Innsending
+    description: Endepunkter for innsending av meldinger om omsorgsansvar
+  - name: Tilbakemelding
+    description: Endepunkter for polling og oppslag av tilbakemeldinger
+paths:
+  /api/v1/omsorgsansvar/endre:
+    post:
+      tags:
+        - Innsending
+      summary: Send melding om endring
+      description: >-
+        Registrere ny oppforing med informasjon og tilhorende metadata i
+        Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen
+        avvist.
+      operationId: sendInnEndring
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndreRequest'
+      responses:
+        '202':
+          description: Melding mottatt for asynkron behandling.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InnsendingKvittering'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: >-
+            `avsendersMeldingsidentifikator` finnes allerede for denne klienten (idempotent
+            konflikt).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feilmelding'
+  /api/v1/omsorgsansvar/korrigere:
+    post:
+      tags:
+        - Innsending
+      summary: Send melding om korrigering
+      description: >-
+        Bytte ut informasjon eller metadata pa en eksisterende oppforing i
+        Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt
+        tilsvarende tidspunktet for korrigeringen.
+      operationId: sendInnKorrigering
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KorrigereRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/omsorgsansvar/opphoere:
+    post:
+      tags:
+        - Innsending
+      summary: Send melding om opphor
+      description: >-
+        Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a
+        sette opphorstidspunktet i de tilhorende metadataene.
+      operationId: sendInnOpphoer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpphoereRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/omsorgsansvar/annullere:
+    post:
+      tags:
+        - Innsending
+      summary: Send melding om annullering
+      description: >-
+        Fjerne en oppforing med informasjon og tilhorende metadata slik at det
+        ikke lenger vises i Folkeregisteret at informasjonen har vaert
+        registrert. Informasjonen har aldri vaert gyldig.
+      operationId: sendInnAnnullering
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnullereRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/omsorgsansvar/overfoere:
+    post:
+      tags:
+        - Innsending
+      summary: Send melding om overforing
+      description: >-
+        Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en
+        annen.
+      operationId: sendInnOverfoering
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OverfoereRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/tilbakemeldinger/start:
+    get:
+      tags:
+        - Tilbakemelding
+      summary: Hent startsekvens for klient
+      description: >-
+        Returnerer startsekvens for autentisert klient. Sekvensen er
+        klient-skopet, ikke global.
+
+        Bruk denne ved oppstart:
+        1) Kall dette endepunktet.
+        2) Les `sekvensnummer` i responsen.
+        3) Kall `GET /api/v1/tilbakemeldinger` med `fraSekvensnummer=<sekvensnummer>`.
+
+        Ved videre polling bruker klienten `nesteSekvensnummer` fra forrige poll-respons,
+        ikke `/start` pa nytt.
+      operationId: hentStartsekvensForTilbakemeldinger
+      parameters:
+        - name: dato
+          in: query
+          required: false
+          description: >-
+            Valgfri dato for startpunkt. Nar satt returneres sekvens som peker pa
+            klientens hendelser fra oppgitt dato.
+          schema:
+            type: string
+            format: date
+            example: '2026-09-01'
+      responses:
+        '200':
+          description: Startsekvens for klient.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TilbakemeldingStart'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/tilbakemeldinger:
+    get:
+      tags:
+        - Tilbakemelding
+      summary: Poll tilbakemeldinger
+      description: >-
+        Henter tilbakemeldinger for autentisert klient fra og med gitt sekvens.
+        Returnerer kun klientens egne meldinger.
+
+        Polling-flyt:
+        1) Start med sekvens fra `GET /api/v1/tilbakemeldinger/start`.
+        2) Send `fraSekvensnummer` i dette kallet.
+        3) Bruk `nesteSekvensnummer` fra responsen i neste kall.
+        4) Gjenta med jevnt intervall.
+      operationId: hentTilbakemeldinger
+      parameters:
+        - name: fraSekvensnummer
+          in: query
+          required: false
+          description: >-
+            Sekvensnummer a starte fra (inkludert). Bruk `sekvensnummer` fra
+            `/tilbakemeldinger/start` ved oppstart, og senere `nesteSekvensnummer`
+            fra forrige poll-respons.
+          schema:
+            type: integer
+            format: int64
+            default: 0
+            minimum: 0
+        - name: antall
+          in: query
+          required: false
+          description: Maks antall hendelser som returneres.
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+      responses:
+        '200':
+          description: Liste med tilbakemeldinger for klient.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TilbakemeldingSide'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/tilbakemeldinger/meldinger/{avsendersMeldingsidentifikator}:
+    get:
+      tags:
+        - Tilbakemelding
+      summary: Hent tilbakemelding per klientmeldingsid
+      description: >-
+        Oppslag pa klientens egen meldingsid. Nyttig ved ny innsending/idempotens og
+        gjenfinning.
+      operationId: hentTilbakemeldingVedAvsendersMeldingsidentifikator
+      parameters:
+        - name: avsendersMeldingsidentifikator
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 4000
+      responses:
+        '200':
+          description: Tilbakemelding funnet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TilbakemeldingHendelse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/tilbakemeldinger/saker/{saksnummer}:
+    get:
+      tags:
+        - Tilbakemelding
+      summary: Hent status for sak
+      description: Returnerer siste kjente status for en innsending.
+      operationId: hentTilbakemeldingVedSaksnummer
+      parameters:
+        - name: saksnummer
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        '200':
+          description: Sak funnet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SakStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    Accepted:
+      description: Melding mottatt for asynkron behandling.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InnsendingKvittering'
+    BadRequest:
+      description: Ugyldig input.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feilmelding'
+    Unauthorized:
+      description: Mangler gyldig autentisering.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feilmelding'
+    Forbidden:
+      description: Ikke tilgang.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feilmelding'
+    Conflict:
+      description: Konflikt, typisk duplikat `avsendersMeldingsidentifikator`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feilmelding'
+    NotFound:
+      description: Ressurs ikke funnet.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feilmelding'
+  schemas:
+    EndreRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseSubmissionRequest'
+        - type: object
+          required:
+            - forespoerseltype
+          properties:
+            forespoerseltype:
+              type: string
+              enum:
+                - endre
+      example:
+        avsendersMeldingsidentifikator: MSG-2026-ENDRE-0001
+        avsendersSaksreferanse: SAK-2026-ENDRE-0001
+        forespoerseltype: endre
+        kildesystem: Visma Flyt Barnevern
+        avsendersInnsendingstidspunkt: '2026-09-07T11:30:00+02:00'
+        gyldighetsdato: '2026-09-01'
+        mottak:
+          mottakstidspunktFraOpprinneligKanal: '2026-09-07'
+          informasjonskanal: elektroniskMelding
+        innsender:
+          - innsendertype: barnevernstjenesten
+            navnPaaBarnevernstjenesten: Oslo barnevernstjeneste
+            barnevernstjeneste: '123456789'
+        barn:
+          foedselsEllerDNummer: '01010112345'
+        forelder:
+          foedselsEllerDNummer: '02020223456'
+        barnevernstjeneste:
+          ansvarligBarnevernstjeneste: '111222333'
+        vedlegg:
+          - filnavn: vedtak.pdf
+            innholdstype: application/pdf
+            innholdBase64: UERG
+    KorrigereRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseSubmissionRequest'
+        - type: object
+          required:
+            - forespoerseltype
+          properties:
+            forespoerseltype:
+              type: string
+              enum:
+                - korrigere
+    OpphoereRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseSubmissionRequest'
+        - type: object
+          required:
+            - forespoerseltype
+          properties:
+            forespoerseltype:
+              type: string
+              enum:
+                - opphoere
+    AnnullereRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseSubmissionRequest'
+        - type: object
+          required:
+            - forespoerseltype
+          properties:
+            forespoerseltype:
+              type: string
+              enum:
+                - annullere
+    OverfoereRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseSubmissionRequest'
+        - type: object
+          required:
+            - forespoerseltype
+          properties:
+            forespoerseltype:
+              type: string
+              enum:
+                - overfoere
+    BaseSubmissionRequest:
+      type: object
+      required:
+        - avsendersMeldingsidentifikator
+        - avsendersSaksreferanse
+        - forespoerseltype
+        - kildesystem
+        - avsendersInnsendingstidspunkt
+        - gyldighetsdato
+        - mottak
+        - innsender
+        - barn
+        - forelder
+        - barnevernstjeneste
+      properties:
+        avsendersMeldingsidentifikator:
+          type: string
+          maxLength: 4000
+          description: >-
+            Klientens unike meldingsid. Brukes som idempotensnokkel (unik per
+            klient/tenant).
+        avsendersSaksreferanse:
+          type: string
+          maxLength: 4000
+          description: >-
+            Klientens interne saksreferanse. Obligatorisk og returneres i
+            tilbakemeldinger.
+        forespoerseltype:
+          $ref: '#/components/schemas/Forespoerseltype'
+        kildesystem:
+          type: string
+          maxLength: 4000
+          description: Navn pa avgivende kildesystem.
+        avsendersInnsendingstidspunkt:
+          type: string
+          format: date-time
+          description: Tidspunkt da meldingen ble sendt fra klienten.
+        gyldighetsdato:
+          type: string
+          format: date
+          description: >-
+            Operasjonsspesifikk dato: gyldig fra, opphor, eller
+            overforingstidspunkt avhengig av endepunkt.
+        mottak:
+          $ref: '#/components/schemas/Informasjonsmottak'
+        innsender:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Innsender'
+          description: En eller flere innsendere.
+        barn:
+          $ref: '#/components/schemas/Personidentifikator'
+        forelder:
+          $ref: '#/components/schemas/Personidentifikator'
+        barnevernstjeneste:
+          $ref: '#/components/schemas/Barnevernstjeneste'
+        vedlegg:
+          type: array
+          description: Valgfrie vedlegg kodet i base64.
+          items:
+            $ref: '#/components/schemas/Vedlegg'
+    Innsender:
+      type: object
+      required:
+        - innsendertype
+        - navnPaaBarnevernstjenesten
+        - barnevernstjeneste
+      properties:
+        innsendertype:
+          type: string
+          enum:
+            - barnevernstjenesten
+        navnPaaBarnevernstjenesten:
+          type: string
+          maxLength: 175
+        barnevernstjeneste:
+          type: string
+          pattern: ^[0-9]{9}$
+    Forespoerseltype:
+      type: string
+      enum:
+        - endre
+        - korrigere
+        - opphoere
+        - annullere
+        - overfoere
+    Informasjonsmottak:
+      type: object
+      required:
+        - mottakstidspunktFraOpprinneligKanal
+        - informasjonskanal
+      properties:
+        mottakstidspunktFraOpprinneligKanal:
+          type: string
+          format: date
+        informasjonskanal:
+          type: string
+          enum:
+            - elektroniskMelding
+    Personidentifikator:
+      type: object
+      required:
+        - foedselsEllerDNummer
+      properties:
+        foedselsEllerDNummer:
+          type: string
+          pattern: ^[0-9]{11}$
+          description: Fodselsnummer eller D-nummer (11 siffer).
+    Barnevernstjeneste:
+      type: object
+      required:
+        - ansvarligBarnevernstjeneste
+      properties:
+        ansvarligBarnevernstjeneste:
+          type: string
+          pattern: ^[0-9]{9}$
+    Vedlegg:
+      type: object
+      required:
+        - filnavn
+        - innholdstype
+        - innholdBase64
+      properties:
+        filnavn:
+          type: string
+          maxLength: 255
+        innholdstype:
+          type: string
+          enum:
+            - application/pdf
+            - image/png
+            - image/jpeg
+        innholdBase64:
+          type: string
+          format: byte
+          description: Filinnhold kodet i base64.
+    InnsendingKvittering:
+      type: object
+      required:
+        - sakId
+        - saksnummer
+        - avsendersMeldingsidentifikator
+        - status
+        - mottattTidspunkt
+      properties:
+        sakId:
+          type: string
+          format: uuid
+        saksnummer:
+          type: string
+        avsendersMeldingsidentifikator:
+          type: string
+        status:
+          type: string
+          enum:
+            - MOTTATT
+            - UNDER_BEHANDLING
+            - FERDIGBEHANDLET
+            - AVVIST
+            - TRENGER_MANUELL_BEHANDLING
+        mottattTidspunkt:
+          type: string
+          format: date-time
+    TilbakemeldingStart:
+      type: object
+      required:
+        - sekvensnummer
+      properties:
+        sekvensnummer:
+          type: integer
+          format: int64
+          minimum: 0
+    TilbakemeldingSide:
+      type: object
+      required:
+        - fraSekvensnummer
+        - nesteSekvensnummer
+        - tilbakemeldinger
+      properties:
+        fraSekvensnummer:
+          type: integer
+          format: int64
+        nesteSekvensnummer:
+          type: integer
+          format: int64
+          description: Bruk denne verdien som `fraSekvensnummer` i neste poll-kall.
+        tilbakemeldinger:
+          type: array
+          items:
+            $ref: '#/components/schemas/TilbakemeldingHendelse'
+    TilbakemeldingHendelse:
+      type: object
+      required:
+        - sekvensnummer
+        - sakId
+        - saksnummer
+        - avsendersMeldingsidentifikator
+        - status
+        - oppdatertTidspunkt
+      properties:
+        sekvensnummer:
+          type: integer
+          format: int64
+        sakId:
+          type: string
+          format: uuid
+        saksnummer:
+          type: string
+        avsendersMeldingsidentifikator:
+          type: string
+        avsendersSaksreferanse:
+          type: string
+        status:
+          type: string
+          enum:
+            - MOTTATT
+            - UNDER_BEHANDLING
+            - FERDIGBEHANDLET
+            - AVVIST
+            - TRENGER_MANUELL_BEHANDLING
+        resultatkode:
+          type: string
+          description: Maskinlesbar kode fra backend/Folkeregisteret.
+        resultatbeskrivelse:
+          type: string
+          description: Lesbar beskrivelse av resultat.
+        oppdatertTidspunkt:
+          type: string
+          format: date-time
+    SakStatus:
+      type: object
+      required:
+        - sakId
+        - saksnummer
+        - avsendersMeldingsidentifikator
+        - status
+        - oppdatertTidspunkt
+      properties:
+        sakId:
+          type: string
+          format: uuid
+        saksnummer:
+          type: string
+        avsendersMeldingsidentifikator:
+          type: string
+        status:
+          type: string
+          enum:
+            - MOTTATT
+            - UNDER_BEHANDLING
+            - FERDIGBEHANDLET
+            - AVVIST
+            - TRENGER_MANUELL_BEHANDLING
+        oppdatertTidspunkt:
+          type: string
+          format: date-time
+    Feilmelding:
+      type: object
+      required:
+        - kode
+        - melding
+      properties:
+        kode:
+          type: string
+          example: valideringsfeil
+        melding:
+          type: string
+          example: Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$
+        korrelasjonsid:
+          type: string
+          description: Kan brukes ved supporthenvendelser.
+
