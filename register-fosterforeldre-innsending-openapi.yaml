@@ -387,9 +387,6 @@ components:
         kildesystem: Visma Flyt Barnevern
         avsendersInnsendingstidspunkt: '2026-09-07T11:30:00+02:00'
         gyldighetsdato: '2026-09-01'
-        mottak:
-          mottakstidspunktFraOpprinneligKanal: '2026-09-07'
-          informasjonskanal: elektroniskMelding
         innsender:
           - innsendertype: barnevernstjenesten
             navnPaaBarnevernstjenesten: Oslo barnevernstjeneste
@@ -450,6 +447,10 @@ components:
                 - overfoere
     BaseSubmissionRequest:
       type: object
+      description: >-
+        Offentlig requestmodell for innsending. `mottak` eksponeres ikke i
+        API-et, men settes internt av mottakslosningen for videreformidling til
+        backend/Folkeregisteret.
       required:
         - avsendersMeldingsidentifikator
         - avsendersSaksreferanse
@@ -457,7 +458,6 @@ components:
         - kildesystem
         - avsendersInnsendingstidspunkt
         - gyldighetsdato
-        - mottak
         - innsender
         - barn
         - forelder
@@ -491,8 +491,6 @@ components:
           description: >-
             Operasjonsspesifikk dato: gyldig fra, opphor, eller
             overforingstidspunkt avhengig av endepunkt.
-        mottak:
-          $ref: '#/components/schemas/Informasjonsmottak'
         innsender:
           type: array
           minItems: 1
@@ -535,19 +533,6 @@ components:
         - opphoere
         - annullere
         - overfoere
-    Informasjonsmottak:
-      type: object
-      required:
-        - mottakstidspunktFraOpprinneligKanal
-        - informasjonskanal
-      properties:
-        mottakstidspunktFraOpprinneligKanal:
-          type: string
-          format: date
-        informasjonskanal:
-          type: string
-          enum:
-            - elektroniskMelding
     Personidentifikator:
       type: object
       required:

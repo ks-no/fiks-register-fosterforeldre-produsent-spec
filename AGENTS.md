@@ -26,6 +26,7 @@ Dette dokumentet beskriver etablerte regler og praksis for API-spesifikasjonen i
   - `POST /api/v1/omsorgsansvar/overfoere`
 - Payload er JSON (ikke XML).
 - Vedlegg stoettes som `vedlegg` (base64) i API-kontrakten.
+- `mottak` eksponeres ikke i det offentlige API-et; dette settes internt av mottakslosningen for videreformidling til backend.
 
 ## Polling og oppslag
 
@@ -46,9 +47,7 @@ Dette dokumentet beskriver etablerte regler og praksis for API-spesifikasjonen i
 
 - `avsendersSaksreferanse` er obligatorisk.
 - `forespoerseltype` er obligatorisk, og operasjonsspesifikke request-skjema skal laase korrekt verdi.
-- `mottak` skal modelleres som objekt med:
-  - `mottakstidspunktFraOpprinneligKanal`
-  - `informasjonskanal` (`elektroniskMelding`)
+- `mottak` finnes i XSD og settes internt mot backend, men skal ikke vaere del av den offentlige request-payloaden i API-specen.
 - XSD-verdier for enum brukes uendret:
   - `forespoerseltype`: `endre|korrigere|opphoere|annullere|overfoere`
   - `innsendertype`: `barnevernstjenesten`
@@ -73,4 +72,5 @@ npx -y @redocly/cli lint register-fosterforeldre-innsending-openapi.yaml
 
 3. Verifiser i Swagger-preview i IntelliJ.
 4. Ved tvil: prioriter navnebruk og regler fra XSD/PDF.
+
 
