@@ -235,6 +235,388 @@ Eksempel på idempotenskonflikt:
 
 Gjeldende API-kontrakt finnes i `register-fosterforeldre-produsent.json`.
 
+## Eksempler på bruk av apiet.
+
+### 1. Ny fosterhjemsplassering
+Barnet flytter til et fosterhjem, og en fosterforelder skal registreres med omsorgsansvar fra en gitt dato.
+
+Passer til: `endre`
+
+Eksempel: Barn flytter til fosterhjem 1. september, og fosterforelder registreres fra samme dato.
+
+Endepunkt: `POST /api/v1/omsorgsansvar/endre`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0101",
+  "avsendersSaksreferanse": "SAK-2026-1001",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-01T10:15:00+02:00",
+  "gyldighetsdato": "2026-09-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+      "barnevernstjeneste": "123456789"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "01010112345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "02020223456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "111222333"
+  }
+}
+```
+
+### 2. Begge fosterforeldre skal registreres
+Et barn flytter inn hos to fosterforeldre, men bare en er registrert fra for. Den andre ma registreres som egen melding.
+
+Passer til: `endre`
+
+Eksempel: Fosterfar er registrert. Foster mor legges til som ny registrering.
+
+Endepunkt: `POST /api/v1/omsorgsansvar/endre`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0102",
+  "avsendersSaksreferanse": "SAK-2026-1001",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-02T09:00:00+02:00",
+  "gyldighetsdato": "2026-09-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+      "barnevernstjeneste": "123456789"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "01010112345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "03030334567"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "111222333"
+  }
+}
+```
+
+### 3. Feil person ble registrert
+Barnevernstjenesten oppdager at feil fosterforelder ble meldt inn, eller at feil fodselsnummer ble brukt.
+
+Passer til: `korrigere` eller `annullere`, avhengig av situasjon.
+
+Typisk vurdering:
+- Bruk `korrigere` hvis en eksisterende registrering skal rettes.
+- Bruk `annullere` hvis registreringen aldri skulle vart der.
+
+Eksempel A - korrigere (rette person):
+
+Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0201",
+  "avsendersSaksreferanse": "SAK-2026-1002",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-05T08:45:00+02:00",
+  "gyldighetsdato": "2026-09-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Bergen barnevernstjeneste",
+      "barnevernstjeneste": "234567891"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "11111112345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "12121223456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "234567891"
+  }
+}
+```
+
+Eksempel B - annullere (registreringen skulle aldri eksistert):
+
+Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0301",
+  "avsendersSaksreferanse": "SAK-2026-1002",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-05T08:50:00+02:00",
+  "gyldighetsdato": "2026-09-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Bergen barnevernstjeneste",
+      "barnevernstjeneste": "234567891"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "11111112345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "99999999999"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "234567891"
+  }
+}
+```
+
+### 4. Feil dato ble sendt inn
+Omsorgsansvaret er riktig, men gyldig-fra-datoen eller opphorsdatoen ble feil.
+
+Passer til: `korrigere`
+
+Eksempel: Meldingen ble sendt med `2026-09-01`, men riktig dato var `2026-08-15`.
+
+Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0202",
+  "avsendersSaksreferanse": "SAK-2026-1003",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-06T10:20:00+02:00",
+  "gyldighetsdato": "2026-08-15",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Trondheim barnevernstjeneste",
+      "barnevernstjeneste": "345678912"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "13131312345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "14141423456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "345678912"
+  }
+}
+```
+
+### 5. Fosterhjemsforholdet avsluttes
+Barnet flytter ut av fosterhjemmet, eller fosterforelderen har ikke lenger omsorgsansvar.
+
+Passer til: `opphoere`
+
+Eksempler:
+- Barn flytter hjem til biologiske foreldre
+- Barn flytter til institusjon
+- Fosterhjemsavtalen avsluttes
+
+Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0401",
+  "avsendersSaksreferanse": "SAK-2026-1004",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-10-01T08:00:00+02:00",
+  "gyldighetsdato": "2026-10-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Drammen barnevernstjeneste",
+      "barnevernstjeneste": "456789123"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "15151512345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "16161623456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "456789123"
+  }
+}
+```
+
+### 6. Barnet flytter til nytt fosterhjem
+Omsorgsansvaret i ett fosterhjem opphorer, og nytt omsorgsansvar starter i et annet fosterhjem.
+
+Passer til: ofte en kombinasjon av `opphoere` og `endre`.
+
+Eksempel:
+- Fosterhjem A avsluttes `2026-09-30` (opphoere)
+- Fosterhjem B starter `2026-10-01` (endre)
+
+Eksempel A - avslutte eksisterende registrering:
+
+Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0402",
+  "avsendersSaksreferanse": "SAK-2026-1005",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-30T12:00:00+02:00",
+  "gyldighetsdato": "2026-09-30",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Kristiansand barnevernstjeneste",
+      "barnevernstjeneste": "567891234"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "17171712345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "18181823456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "567891234"
+  }
+}
+```
+
+Eksempel B - registrere nytt fosterhjem:
+
+Endepunkt: `POST /api/v1/omsorgsansvar/endre`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0103",
+  "avsendersSaksreferanse": "SAK-2026-1005",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-10-01T09:00:00+02:00",
+  "gyldighetsdato": "2026-10-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Kristiansand barnevernstjeneste",
+      "barnevernstjeneste": "567891234"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "17171712345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "19191934567"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "567891234"
+  }
+}
+```
+
+### 7. Omsorgsansvaret overtas av annen barnevernstjeneste
+Barnet flytter til en annen kommune, eller saken overfores administrativt til en annen barnevernstjeneste.
+
+Passer til: `overfoere`
+
+Eksempel: Barnet bor fortsatt i fosterhjemmet, men ansvaret flyttes mellom tjenester.
+
+Endepunkt: `POST /api/v1/omsorgsansvar/overfoere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-OVERFOERE-0501",
+  "avsendersSaksreferanse": "SAK-2026-1006",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-11-01T10:00:00+01:00",
+  "gyldighetsdato": "2026-11-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Asker barnevernstjeneste",
+      "barnevernstjeneste": "678912345"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "20202012345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "21212123456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "789123456"
+  }
+}
+```
+
+### 8. Registreringen skulle aldri vart opprettet
+Det ble meldt inn omsorgsansvar pa feil grunnlag, eller plasseringen ble aldri gjennomfort.
+
+Passer til: `annullere`
+
+Eksempler:
+- Vedtak ble omgjort for plassering tradte i kraft
+- Barnet flyttet aldri inn
+- Registreringen ble sendt pa feil sak
+
+Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0302",
+  "avsendersSaksreferanse": "SAK-2026-1007",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-09-10T13:10:00+02:00",
+  "gyldighetsdato": "2026-09-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Stavanger barnevernstjeneste",
+      "barnevernstjeneste": "789123456"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "22222212345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "23232323456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "789123456"
+  }
+}
+```
+
+### 9. Tidligere korrekt registrering ma oppdateres etter ny vurdering
+Det skjer intern kontroll eller revisjon, og eksisterende opplysninger ma rettes uten at omsorgsansvaret opphorer.
+
+Passer til: `korrigere`
+
+Eksempler:
+- Feil saksreferanse
+- Feil kobling mellom barn og fosterforelder
+- Feil ansvarlig barnevernstjeneste i meldingen
+
+Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
+
+```json
+{
+  "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0203",
+  "avsendersSaksreferanse": "SAK-2026-1008-KORR",
+  "kildesystem": "Visma Flyt Barnevern",
+  "avsendersInnsendingstidspunkt": "2026-12-15T14:30:00+01:00",
+  "gyldighetsdato": "2026-09-01",
+  "innsender": [
+    {
+      "navnPaaBarnevernstjenesten": "Tromso barnevernstjeneste",
+      "barnevernstjeneste": "891234567"
+    }
+  ],
+  "barn": {
+    "foedselsEllerDNummer": "24242412345"
+  },
+  "forelder": {
+    "foedselsEllerDNummer": "25252523456"
+  },
+  "barnevernstjeneste": {
+    "ansvarligBarnevernstjeneste": "891234567"
+  }
+}
+```
 
 
 
