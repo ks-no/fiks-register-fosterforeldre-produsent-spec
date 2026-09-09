@@ -5,7 +5,7 @@ Dette dokumentet beskriver etablerte regler og praksis for API-spesifikasjonen i
 Backend api for skatteetatetn dokumentasjon: https://skatteetaten.github.io/folkeregisteret-api-dokumentasjon/mottak/
 ## Canonical filer
 
-- Canonical OpenAPI: `register-fosterforeldre-innsending-openapi.yaml`
+- Canonical OpenAPI: `register-fosterforeldre-produsent.json`
 - XSD kildegrunnlag: `meldinger/MeldingOmEndringAvOmsorgsansvar_v1.0.xsd`
 - Faglig beskrivelse: `meldinger/Melding om endring av omsorgsansvar august 2026.pdf`
 - Eksempler: `examples/*.xml`
@@ -66,11 +66,11 @@ Backend api for skatteetatetn dokumentasjon: https://skatteetaten.github.io/folk
 
 ## Endringsrutine
 
-1. Oppdater `register-fosterforeldre-innsending-openapi.yaml`.
+1. Oppdater `register-fosterforeldre-produsent.json`.
 2. Kjor lint lokalt:
 
 ```bash
-npx -y @redocly/cli lint register-fosterforeldre-innsending-openapi.yaml
+npx -y @redocly/cli lint register-fosterforeldre-produsent.json
 ```
 
 3. Verifiser i Swagger-preview i IntelliJ.
