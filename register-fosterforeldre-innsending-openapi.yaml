@@ -191,7 +191,9 @@ paths:
       summary: Hent startsekvens for klient
       description: >-
         Returnerer startsekvens for autentisert klient. Sekvensen er
-        klient-skopet, ikke global.
+        klient-skopet, ikke global. Sekvensnummer gjenbrukes fra Skatt og kan
+        derfor inneholde hull; klienten ma ikke anta at verdiene er
+        fortlopende.
 
         Bruk denne ved oppstart:
         1) Kall dette endepunktet.
@@ -230,7 +232,9 @@ paths:
       summary: Poll tilbakemeldinger
       description: >-
         Henter tilbakemeldinger for autentisert klient fra og med gitt sekvens.
-        Returnerer kun klientens egne meldinger.
+        Returnerer kun klientens egne meldinger. Sekvensnummer gjenbrukes fra
+        Skatt og kan inneholde hull, sa klienten ma alltid bruke returnert
+        `nesteSekvensnummer` og ikke beregne neste verdi selv.
 
         Polling-flyt:
         1) Start med sekvens fra `GET /api/v1/tilbakemeldinger/start`.
@@ -245,7 +249,8 @@ paths:
           description: >-
             Sekvensnummer a starte fra (inkludert). Bruk `sekvensnummer` fra
             `/tilbakemeldinger/start` ved oppstart, og senere `nesteSekvensnummer`
-            fra forrige poll-respons.
+            fra forrige poll-respons. Sekvensnummer kan inneholde hull fordi
+            sekvensen gjenbrukes fra Skatt.
           schema:
             type: integer
             format: int64
@@ -582,6 +587,9 @@ components:
           type: integer
           format: int64
           minimum: 0
+          description: >-
+            Startsekvens for klienten. Sekvensnummer kan inneholde hull fordi
+            sekvensen gjenbrukes fra Skatt.
     TilbakemeldingSide:
       type: object
       required:
@@ -595,7 +603,10 @@ components:
         nesteSekvensnummer:
           type: integer
           format: int64
-          description: Bruk denne verdien som `fraSekvensnummer` i neste poll-kall.
+          description: >-
+            Bruk denne verdien som `fraSekvensnummer` i neste poll-kall.
+            Sekvensnummer kan inneholde hull fordi sekvensen gjenbrukes fra
+            Skatt.
         tilbakemeldinger:
           type: array
           items:
@@ -613,6 +624,9 @@ components:
         sekvensnummer:
           type: integer
           format: int64
+          description: >-
+            Sekvensnummer for hendelsen. Sekvensnummer kan inneholde hull fordi
+            sekvensen gjenbrukes fra Skatt.
         sakId:
           type: string
           format: uuid

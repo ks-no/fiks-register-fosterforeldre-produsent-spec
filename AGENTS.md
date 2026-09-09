@@ -2,6 +2,7 @@
 
 Dette dokumentet beskriver etablerte regler og praksis for API-spesifikasjonen i dette repoet.
 
+Backend api for skatteetatetn dokumentasjon: https://skatteetaten.github.io/folkeregisteret-api-dokumentasjon/mottak/
 ## Canonical filer
 
 - Canonical OpenAPI: `register-fosterforeldre-innsending-openapi.yaml`
