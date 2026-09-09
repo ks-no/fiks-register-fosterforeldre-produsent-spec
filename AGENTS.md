@@ -25,6 +25,8 @@ Dette dokumentet beskriver etablerte regler og praksis for API-spesifikasjonen i
   - `POST /api/v1/omsorgsansvar/annullere`
   - `POST /api/v1/omsorgsansvar/overfoere`
 - Payload er JSON (ikke XML).
+- `forespoerseltype` eksponeres ikke i offentlig request-payload; operasjonen bestemmes av valgt endepunkt.
+- `innsendertype` eksponeres ikke i offentlig request-payload; verdien settes internt ved videreformidling til backend.
 - Vedlegg stoettes som `vedlegg` (base64) i API-kontrakten.
 - `mottak` eksponeres ikke i det offentlige API-et; dette settes internt av mottakslosningen for videreformidling til backend.
 
@@ -46,11 +48,11 @@ Dette dokumentet beskriver etablerte regler og praksis for API-spesifikasjonen i
 ## XSD/PDF-konsistens som skal holdes
 
 - `avsendersSaksreferanse` er obligatorisk.
-- `forespoerseltype` er obligatorisk, og operasjonsspesifikke request-skjema skal laase korrekt verdi.
+- `forespoerseltype` er obligatorisk i XSD mot backend, men skal ikke vaere del av den offentlige request-payloaden i API-specen; verdien utledes av valgt endepunkt.
 - `mottak` finnes i XSD og settes internt mot backend, men skal ikke vaere del av den offentlige request-payloaden i API-specen.
+- `mottak.mottakstidspunktFraOpprinneligKanal` settes internt til `Date.now()` ved videreformidling.
 - XSD-verdier for enum brukes uendret:
   - `forespoerseltype`: `endre|korrigere|opphoere|annullere|overfoere`
-  - `innsendertype`: `barnevernstjenesten`
   - `informasjonskanal`: `elektroniskMelding`
 - Format/regler:
   - `foedselsEllerDNummer`: 11 sifre
@@ -72,5 +74,6 @@ npx -y @redocly/cli lint register-fosterforeldre-innsending-openapi.yaml
 
 3. Verifiser i Swagger-preview i IntelliJ.
 4. Ved tvil: prioriter navnebruk og regler fra XSD/PDF.
+
 
 
