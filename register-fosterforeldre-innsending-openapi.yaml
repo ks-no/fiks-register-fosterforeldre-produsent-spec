@@ -540,6 +540,10 @@ components:
           format: uuid
         saksnummer:
           type: string
+        folkeregisterReferanse:
+          type: string
+          format: uuid
+          description: Referanse returnert fra Folkeregisterets mottak ved akseptert innsending.
         avsendersMeldingsidentifikator:
           type: string
         status:
@@ -553,6 +557,13 @@ components:
         mottattTidspunkt:
           type: string
           format: date-time
+      example:
+        sakId: 2d7f86de-4d3c-4e93-a9fc-3f65a54f5c4a
+        saksnummer: '2026-000123'
+        folkeregisterReferanse: 47956f5b-fa1e-447d-a62d-b6714bc1f120
+        avsendersMeldingsidentifikator: MSG-2026-ENDRE-0001
+        status: MOTTATT
+        mottattTidspunkt: '2026-09-09T09:12:31Z'
     TilbakemeldingStart:
       type: object
       required:
@@ -598,6 +609,10 @@ components:
           format: uuid
         saksnummer:
           type: string
+        folkeregisterReferanse:
+          type: string
+          format: uuid
+          description: Referanse fra Folkeregisteret for opprinnelig innsending.
         avsendersMeldingsidentifikator:
           type: string
         avsendersSaksreferanse:
@@ -619,6 +634,17 @@ components:
         oppdatertTidspunkt:
           type: string
           format: date-time
+      example:
+        sekvensnummer: 182734
+        sakId: 2d7f86de-4d3c-4e93-a9fc-3f65a54f5c4a
+        saksnummer: '2026-000123'
+        folkeregisterReferanse: 47956f5b-fa1e-447d-a62d-b6714bc1f120
+        avsendersMeldingsidentifikator: MSG-2026-ENDRE-0001
+        avsendersSaksreferanse: SAK-2026-ENDRE-0001
+        status: FERDIGBEHANDLET
+        resultatkode: FREG-OK
+        resultatbeskrivelse: Meldingen er ferdig behandlet.
+        oppdatertTidspunkt: '2026-09-09T09:13:05Z'
     SakStatus:
       type: object
       required:
@@ -655,10 +681,38 @@ components:
         kode:
           type: string
           example: valideringsfeil
+          description: API-ets overordnede feilkode.
+        backendFeilkode:
+          type: string
+          description: Feilkode mottatt fra backend/Folkeregisteret nar tilgjengelig.
+          example: ske.folkeregister.mottak.infrastructure.exceptions.KonsumentManglerTilgangException
         melding:
           type: string
           example: Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$
+        httpStatus:
+          type: integer
+          format: int32
+          description: HTTP-statuskode returnert av underliggende tjeneste nar relevant.
+          example: 403
+        alvorlighetsgrad:
+          type: string
+          description: Alvorlighetsgrad fra backend nar oppgitt.
+          example: WARNING
+        tilleggsinformasjon:
+          type: object
+          description: Valgfrie detaljer fra backend for feilsoking.
+          additionalProperties: true
         korrelasjonsid:
           type: string
           description: Kan brukes ved supporthenvendelser.
+      example:
+        kode: valideringsfeil
+        backendFeilkode: ske.folkeregister.mottak.infrastructure.exceptions.KonsumentManglerTilgangException
+        melding: Produsent har ikke tilgang til a sende inn valgt ressurs.
+        httpStatus: 403
+        alvorlighetsgrad: WARNING
+        tilleggsinformasjon:
+          ressurs: melding_om_endring_av_omsorgsansvar_v1
+          retryAfterMillis: 1000
+        korrelasjonsid: 0f7dd0f8fefe4f839146d0fbac9af510
 
