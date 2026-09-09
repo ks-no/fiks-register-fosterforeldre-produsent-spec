@@ -51,7 +51,7 @@ Backend api for skatteetatetn dokumentasjon: https://skatteetaten.github.io/folk
 - `avsendersSaksreferanse` er obligatorisk.
 - `forespoerseltype` er obligatorisk i XSD mot backend, men skal ikke vaere del av den offentlige request-payloaden i API-specen; verdien utledes av valgt endepunkt.
 - `mottak` finnes i XSD og settes internt mot backend, men skal ikke vaere del av den offentlige request-payloaden i API-specen.
-- `mottak.mottakstidspunktFraOpprinneligKanal` settes internt til `Date.now()` ved videreformidling.
+- `mottak.mottakstidspunktFraOpprinneligKanal` settes internt til tidspunktet da Fiks-plattformen mottar requesten fra klienten ved videreformidling.
 - XSD-verdier for enum brukes uendret:
   - `forespoerseltype`: `endre|korrigere|opphoere|annullere|overfoere`
   - `informasjonskanal`: `elektroniskMelding`

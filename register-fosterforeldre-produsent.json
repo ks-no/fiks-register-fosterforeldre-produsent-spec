@@ -37,7 +37,7 @@
           "Innsending"
         ],
         "summary": "Send melding om endring",
-        "description": "Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist. `forespoerseltype` eksponeres ikke i request-payloaden, siden operasjonen bestemmes av URL-en.",
+        "description": "Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=endre`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnEndring",
         "requestBody": {
           "required": true,
@@ -81,7 +81,7 @@
           "Innsending"
         ],
         "summary": "Send melding om korrigering",
-        "description": "Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen. `forespoerseltype` eksponeres ikke i request-payloaden, siden operasjonen bestemmes av URL-en.",
+        "description": "Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=korrigere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnKorrigering",
         "requestBody": {
           "required": true,
@@ -118,7 +118,7 @@
           "Innsending"
         ],
         "summary": "Send melding om opphor",
-        "description": "Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene. `forespoerseltype` eksponeres ikke i request-payloaden, siden operasjonen bestemmes av URL-en.",
+        "description": "Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=opphoere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnOpphoer",
         "requestBody": {
           "required": true,
@@ -155,7 +155,7 @@
           "Innsending"
         ],
         "summary": "Send melding om annullering",
-        "description": "Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig. `forespoerseltype` eksponeres ikke i request-payloaden, siden operasjonen bestemmes av URL-en.",
+        "description": "Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=annullere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnAnnullering",
         "requestBody": {
           "required": true,
@@ -192,7 +192,7 @@
           "Innsending"
         ],
         "summary": "Send melding om overforing",
-        "description": "Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen. `forespoerseltype` eksponeres ikke i request-payloaden, siden operasjonen bestemmes av URL-en.",
+        "description": "Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=overfoere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnOverfoering",
         "requestBody": {
           "required": true,
@@ -540,7 +540,7 @@
       },
       "OmsorgsansvarEndringRequest": {
         "type": "object",
-        "description": "Offentlig requestmodell. Folgende felter fra Skatteetatens backend-melding (XSD) eksponeres ikke i API-et, men settes internt ved videreformidling:\n- `forespoerseltype`: utledes av valgt endepunkt:\n  `/omsorgsansvar/endre` -> `endre`, `/omsorgsansvar/korrigere` ->\n  `korrigere`, `/omsorgsansvar/opphoere` -> `opphoere`,\n  `/omsorgsansvar/annullere` -> `annullere`,\n  `/omsorgsansvar/overfoere` -> `overfoere`.\n- `innsender[].innsendertype`: settes til `barnevernstjenesten`. - `mottak.informasjonskanal`: settes til `elektroniskMelding`. - `mottak.mottakstidspunktFraOpprinneligKanal`: settes internt til\n  `Date.now()` av mottakslosningen.",
+        "description": "Offentlig requestmodell. Folgende felter fra Skatteetatens backend-melding (XSD) eksponeres ikke i API-et, men settes internt ved videreformidling:\n- `forespoerseltype`: utledes av valgt endepunkt:\n  `/omsorgsansvar/endre` -> `endre`, `/omsorgsansvar/korrigere` -> `korrigere`, `/omsorgsansvar/opphoere` -> `opphoere`, `/omsorgsansvar/annullere` -> `annullere`, `/omsorgsansvar/overfoere` -> `overfoere`.\n- `innsender[].innsendertype`: settes til `barnevernstjenesten`.\n- `mottak.informasjonskanal`: settes til `elektroniskMelding`.\n- `mottak.mottakstidspunktFraOpprinneligKanal`: settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten ved videreformidling til Skatt.",
         "required": [
           "avsendersMeldingsidentifikator",
           "avsendersSaksreferanse",
