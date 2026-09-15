@@ -127,7 +127,6 @@ Typisk respons:
 
 ```json
 {
-  "sakId": "2d7f86de-4d3c-4e93-a9fc-3f65a54f5c4a",
   "saksnummer": "2026-000123",
   "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
   "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
@@ -171,7 +170,6 @@ Eksempelrespons:
   "tilbakemeldinger": [
     {
       "sekvensnummer": 182734,
-      "sakId": "2d7f86de-4d3c-4e93-a9fc-3f65a54f5c4a",
       "saksnummer": "2026-000123",
       "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
       "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
@@ -234,7 +232,6 @@ Eksempel på idempotenskonflikt:
   "kode": "idempotent_konflikt",
   "melding": "avsendersMeldingsidentifikator finnes allerede for denne klienten.",
   "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
-  "sakId": "2d7f86de-4d3c-4e93-a9fc-3f65a54f5c4a",
   "saksnummer": "2026-000123"
 }
 ```
