@@ -35,7 +35,7 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 - `kildesystem`
 - `avsendersInnsendingstidspunkt`
 - `gyldighetsdato`
-- `innsender[]`
+- `innsender[]` TODO: blir kun en 
 - `barn.foedselsEllerDNummer`
 - `forelder.foedselsEllerDNummer`
 - `barnevernstjeneste.ansvarligBarnevernstjeneste`
