@@ -18,6 +18,8 @@ Alle endepunkter krever Fiks integrasjon innlogging med maskinporten.
 
 Det finnes ett endepunkt per operasjon:
 
+KOMMENTAR: Skal vi versjonere på dette nivået i urlen???
+
 | Operasjon | Endepunkt | Brukes når |
 |---|---|---|
 | Endre | `POST /api/v1/omsorgsansvar/endre` | Registrere nytt omsorgsansvar |
@@ -37,12 +39,13 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 - `barn.foedselsEllerDNummer`
 - `forelder.foedselsEllerDNummer`
 - `barnevernstjeneste.ansvarligBarnevernstjeneste`
-- `vedlegg[]` (valgfritt)
+- `vedlegg[]` (valgfritt) - skal bort.
 
 ### Viktige regler
 
-- `avsendersMeldingsidentifikator` er klientens idempotensnøkkel og må være unik per klient.
-- `avsendersSaksreferanse` er obligatorisk og returneres i tilbakemeldinger.
+- `avsendersMeldingsidentifikator` er klientens idempotensnøkkel og må være unik, bruk gjerne en UUID.
+- `kildesystem` - navn på fagsystem, fritekst. "Visma flyt barnevern", "Netcompany modulus barn"
+- `avsendersSaksreferanse` er obligatorisk og returneres i tilbakemeldinger. KS Digital prefikser med en klientid.
 - `foedselsEllerDNummer` må være 11 siffer.
 - `Organisasjonsnummer` må være 9 siffer.
 - `avsendersInnsendingstidspunkt` skal være ISO 8601 dato-tid, for eksempel `2026-09-07T11:30:00+02:00` eller `2026-09-09T09:12:31Z`.
@@ -53,9 +56,10 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 
 Følgende felter finnes i Skatteetatens bakgrunnsformat, men inngår ikke i det offentlige API-et:
 
-- `forespoerseltype`
+- `forespoerseltype` - utledes fra url
 - `innsender[].innsendertype`
 - `mottak`
+- `avsendersInnsendingstidspunkt`
 
 Disse feltene settes internt av løsningen:
 
