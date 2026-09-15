@@ -48,7 +48,7 @@
               },
               "examples": {
                 "melding": {
-                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                  "$ref": "#/components/examples/EndreEksempel"
                 }
               }
             }
@@ -56,14 +56,7 @@
         },
         "responses": {
           "202": {
-            "description": "Melding mottatt for asynkron behandling.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InnsendingKvittering"
-                }
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -94,7 +87,7 @@
               },
               "examples": {
                 "melding": {
-                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                  "$ref": "#/components/examples/KorrigereEksempel"
                 }
               }
             }
@@ -133,7 +126,7 @@
               },
               "examples": {
                 "melding": {
-                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                  "$ref": "#/components/examples/OpphoereEksempel"
                 }
               }
             }
@@ -172,7 +165,7 @@
               },
               "examples": {
                 "melding": {
-                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                  "$ref": "#/components/examples/AnnullereEksempel"
                 }
               }
             }
@@ -211,7 +204,7 @@
               },
               "examples": {
                 "melding": {
-                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                  "$ref": "#/components/examples/OverfoereEksempel"
                 }
               }
             }
@@ -239,7 +232,7 @@
           "Tilbakemelding"
         ],
         "summary": "Hent startsekvens for klient",
-        "description": "Returnerer startsekvens for autentisert klient. Sekvensen er klient-skopet, ikke global. Sekvensnummer gjenbrukes fra Skatt og kan derfor inneholde hull; klienten ma ikke anta at verdiene er fortlopende.\nBruk denne ved oppstart: 1) Kall dette endepunktet. 2) Les `sekvensnummer` i responsen. 3) Kall `GET /api/v1/tilbakemeldinger` med `fraSekvensnummer=<sekvensnummer>`.\nVed videre polling bruker klienten `nesteSekvensnummer` fra forrige poll-respons, ikke `/start` pa nytt.",
+        "description": "Returnerer startsekvens for autentisert klient. Sekvensnummeret tildeles av Fiks-plattformen fra en global hendelsesstrom som filtreres per klient. Klienten ser derfor kun sine egne hendelser, og nummerserien er stigende men kan inneholde hull; klienten ma ikke anta at verdiene er fortlopende.\nBruk denne ved oppstart: 1) Kall dette endepunktet. 2) Les `sekvensnummer` i responsen. 3) Kall `GET /api/v1/tilbakemeldinger` med `fraSekvensnummer=<sekvensnummer>`.\nVed videre polling bruker klienten `nesteSekvensnummer` fra forrige poll-respons, ikke `/start` pa nytt.",
         "operationId": "hentStartsekvensForTilbakemeldinger",
         "parameters": [
           {
@@ -280,14 +273,14 @@
           "Tilbakemelding"
         ],
         "summary": "Poll tilbakemeldinger",
-        "description": "Henter tilbakemeldinger for autentisert klient fra og med gitt sekvens. Returnerer kun klientens egne meldinger. Sekvensnummer gjenbrukes fra Skatt og kan inneholde hull, sa klienten ma alltid bruke returnert `nesteSekvensnummer` og ikke beregne neste verdi selv.\nPolling-flyt: 1) Start med sekvens fra `GET /api/v1/tilbakemeldinger/start`. 2) Send `fraSekvensnummer` i dette kallet. 3) Bruk `nesteSekvensnummer` fra responsen i neste kall. 4) Gjenta med jevnt intervall.",
+        "description": "Henter tilbakemeldinger for autentisert klient fra og med gitt sekvens. Returnerer kun klientens egne meldinger. Sekvensnummeret tildeles av Fiks-plattformen fra en global hendelsesstrom som filtreres per klient, sa serien kan inneholde hull. Klienten ma derfor alltid bruke returnert `nesteSekvensnummer` og ikke beregne neste verdi selv.\nPolling-flyt: 1) Start med sekvens fra `GET /api/v1/tilbakemeldinger/start`. 2) Send `fraSekvensnummer` i dette kallet. 3) Bruk `nesteSekvensnummer` fra responsen i neste kall. 4) Gjenta med jevnt intervall.",
         "operationId": "hentTilbakemeldinger",
         "parameters": [
           {
             "name": "fraSekvensnummer",
             "in": "query",
             "required": false,
-            "description": "Sekvensnummer a starte fra (inkludert). Bruk `sekvensnummer` fra `/tilbakemeldinger/start` ved oppstart, og senere `nesteSekvensnummer` fra forrige poll-respons. Sekvensnummer kan inneholde hull fordi sekvensen gjenbrukes fra Skatt.",
+            "description": "Sekvensnummer a starte fra (inkludert). Bruk `sekvensnummer` fra `/tilbakemeldinger/start` ved oppstart, og senere `nesteSekvensnummer` fra forrige poll-respons. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient.",
             "schema": {
               "type": "integer",
               "format": "int64",
@@ -334,7 +327,7 @@
           "Tilbakemelding"
         ],
         "summary": "Hent tilbakemelding per klientmeldingsid",
-        "description": "Oppslag pa klientens egen meldingsid. Nyttig ved ny innsending/idempotens og gjenfinning.",
+        "description": "Oppslag pa klientens egen meldingsid, for gjenfinning og verifisering etter en retry. Returnerer siste kjente tilbakemelding for meldingen.\nMerk: Folkeregisteret tilbyr ikke oppslag per melding. Endepunktet betjenes av Fiks-plattformens egen indeks over hendelsesstrommen. En melding er derfor forst soekbar her etter at Fiks har konsumert tilhorende hendelse fra Folkeregisteret; inntil da returneres 404 selv om meldingen er sendt inn. Bruk `GET /api/v1/tilbakemeldinger` som primaerkilde, og dette endepunktet som supplement.",
         "operationId": "hentTilbakemeldingVedAvsendersMeldingsidentifikator",
         "parameters": [
           {
@@ -369,48 +362,6 @@
           }
         }
       }
-    },
-    "/api/v1/tilbakemeldinger/saker/{saksnummer}": {
-      "get": {
-        "tags": [
-          "Tilbakemelding"
-        ],
-        "summary": "Hent status for sak",
-        "description": "Returnerer siste kjente status for en innsending.",
-        "operationId": "hentTilbakemeldingVedSaksnummer",
-        "parameters": [
-          {
-            "name": "saksnummer",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "maxLength": 100
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Sak funnet.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SakStatus"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/Forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -422,8 +373,9 @@
       }
     },
     "examples": {
-      "OmsorgsansvarEksempel": {
-        "summary": "Melding om endring av omsorgsansvar",
+      "EndreEksempel": {
+        "summary": "Endring av omsorgsansvar",
+        "description": "`gyldighetsdato` er datoen omsorgsansvaret gjelder fra.",
         "value": {
           "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
           "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
@@ -443,6 +395,106 @@
           },
           "barnevernstjeneste": {
             "ansvarligBarnevernstjeneste": "111222333"
+          }
+        }
+      },
+      "KorrigereEksempel": {
+        "summary": "Korrigering av eksisterende omsorgsansvar",
+        "description": "`gyldighetsdato` er gyldig fra-datoen for den korrigerte oppforingen, og erstatter datoen i den opprinnelige meldingen.",
+        "value": {
+          "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0001",
+          "avsendersSaksreferanse": "SAK-2026-KORRIGERE-0001",
+          "kildesystem": "Visma Flyt Barnevern",
+          "gyldighetsdato": "2026-09-01",
+          "innsender": [
+            {
+              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+              "barnevernstjeneste": "123456789"
+            }
+          ],
+          "barn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "forelder": {
+            "foedselsEllerDNummer": "02020223456"
+          },
+          "barnevernstjeneste": {
+            "ansvarligBarnevernstjeneste": "111222333"
+          }
+        }
+      },
+      "OpphoereEksempel": {
+        "summary": "Opphor av omsorgsansvar",
+        "description": "`gyldighetsdato` er datoen omsorgsansvaret opphorer.",
+        "value": {
+          "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0001",
+          "avsendersSaksreferanse": "SAK-2026-OPPHOERE-0001",
+          "kildesystem": "Visma Flyt Barnevern",
+          "gyldighetsdato": "2026-12-31",
+          "innsender": [
+            {
+              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+              "barnevernstjeneste": "123456789"
+            }
+          ],
+          "barn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "forelder": {
+            "foedselsEllerDNummer": "02020223456"
+          },
+          "barnevernstjeneste": {
+            "ansvarligBarnevernstjeneste": "111222333"
+          }
+        }
+      },
+      "AnnullereEksempel": {
+        "summary": "Annullering av omsorgsansvar",
+        "description": "`gyldighetsdato` ma fortsatt sendes fordi feltet er obligatorisk i meldingsformatet, men har ingen praktisk betydning for annullering.",
+        "value": {
+          "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0001",
+          "avsendersSaksreferanse": "SAK-2026-ANNULLERE-0001",
+          "kildesystem": "Visma Flyt Barnevern",
+          "gyldighetsdato": "2026-09-01",
+          "innsender": [
+            {
+              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+              "barnevernstjeneste": "123456789"
+            }
+          ],
+          "barn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "forelder": {
+            "foedselsEllerDNummer": "02020223456"
+          },
+          "barnevernstjeneste": {
+            "ansvarligBarnevernstjeneste": "111222333"
+          }
+        }
+      },
+      "OverfoereEksempel": {
+        "summary": "Overforing av omsorgsansvar til annen barnevernstjeneste",
+        "description": "`gyldighetsdato` er datoen overforingen trer i kraft, og `barnevernstjeneste.ansvarligBarnevernstjeneste` er den nye ansvarlige tjenesten.",
+        "value": {
+          "avsendersMeldingsidentifikator": "MSG-2026-OVERFOERE-0001",
+          "avsendersSaksreferanse": "SAK-2026-OVERFOERE-0001",
+          "kildesystem": "Visma Flyt Barnevern",
+          "gyldighetsdato": "2026-10-01",
+          "innsender": [
+            {
+              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+              "barnevernstjeneste": "123456789"
+            }
+          ],
+          "barn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "forelder": {
+            "foedselsEllerDNummer": "02020223456"
+          },
+          "barnevernstjeneste": {
+            "ansvarligBarnevernstjeneste": "444555666"
           }
         }
       }
@@ -537,7 +589,7 @@
           "avsendersSaksreferanse": {
             "type": "string",
             "maxLength": 4000,
-            "description": "Klientens interne saksreferanse. Obligatorisk og returneres i tilbakemeldinger."
+            "description": "Klientens interne saksreferanse. Obligatorisk. Verdien trenger ikke vaere unik pa tvers av klienter: Fiks-plattformen prefikser den med en klientidentifikator for videreformidling til Folkeregisteret, slik at referansen blir globalt unik. Prefikset fjernes igjen for tilbakemeldinger returneres, slik at klienten alltid ser sin egen opprinnelige verdi."
           },
           "kildesystem": {
             "type": "string",
@@ -660,7 +712,7 @@
             "type": "integer",
             "format": "int64",
             "minimum": 0,
-            "description": "Startsekvens for klienten. Sekvensnummer kan inneholde hull fordi sekvensen gjenbrukes fra Skatt."
+            "description": "Startsekvens for klienten. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient."
           }
         }
       },
@@ -679,7 +731,7 @@
           "nesteSekvensnummer": {
             "type": "integer",
             "format": "int64",
-            "description": "Bruk denne verdien som `fraSekvensnummer` i neste poll-kall. Sekvensnummer kan inneholde hull fordi sekvensen gjenbrukes fra Skatt."
+            "description": "Bruk denne verdien som `fraSekvensnummer` i neste poll-kall. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient."
           },
           "tilbakemeldinger": {
             "type": "array",
@@ -695,6 +747,8 @@
           "sekvensnummer",
           "saksnummer",
           "avsendersMeldingsidentifikator",
+          "avsendersSaksreferanse",
+          "folkeregisterReferanse",
           "status",
           "opprettetTidspunkt",
           "beslutningstidspunkt"
@@ -703,20 +757,23 @@
           "sekvensnummer": {
             "type": "integer",
             "format": "int64",
-            "description": "Sekvensnummer for hendelsen. Sekvensnummer kan inneholde hull fordi sekvensen gjenbrukes fra Skatt."
+            "description": "Sekvensnummer for hendelsen. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient."
           },
           "saksnummer": {
-            "type": "string"
+            "type": "string",
+            "description": "Folkeregisterets saksnummer. Samme saksnummer kan forekomme i flere hendelser."
           },
           "folkeregisterReferanse": {
             "type": "string",
             "description": "Tekst-referanse fra Folkeregisteret for opprinnelig innsending."
           },
           "avsendersMeldingsidentifikator": {
-            "type": "string"
+            "type": "string",
+            "description": "Klientens egen meldingsidentifikator for den innsendte meldingen."
           },
           "avsendersSaksreferanse": {
-            "type": "string"
+            "type": "string",
+            "description": "Klientens egen saksreferanse slik den ble sendt inn. Fiks-plattformen fjerner klientprefikset som legges pa mot Folkeregisteret, slik at verdien her er identisk med den klienten sendte."
           },
           "status": {
             "type": "string",
@@ -792,52 +849,6 @@
           "begrunnelseskode": "identifikatorForBarnErIkkeGjeldende",
           "begrunnelsesnavn": "Opphort fodsels- eller d-nummer for barn",
           "begrunnelsesmerknad": "Barnet er tildelt ny identifikator i Folkeregisteret, 12345678910"
-        }
-      },
-      "SakStatus": {
-        "type": "object",
-        "required": [
-          "saksnummer",
-          "avsendersMeldingsidentifikator",
-          "status",
-          "opprettetTidspunkt",
-          "beslutningstidspunkt"
-        ],
-        "properties": {
-          "saksnummer": {
-            "type": "string"
-          },
-          "avsendersMeldingsidentifikator": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "GODKJENT",
-              "AVSLAATT",
-              "AVVIST",
-              "AVBRUTT",
-              "REGISTRERT"
-            ],
-            "description": "Tilsvarer `Beslutning` fra Folkeregisteret. Per naerende dokumentasjon er kun `AVVIST` og `REGISTRERT` i aktiv bruk."
-          },
-          "begrunnelser": {
-            "type": "array",
-            "description": "Liste med begrunnelser for hvorfor saken er avvist eller har merknad. Kan vaere fravaerende eller tom nar det ikke finnes merknader.",
-            "items": {
-              "$ref": "#/components/schemas/Begrunnelse"
-            }
-          },
-          "opprettetTidspunkt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Tidspunkt for nar Folkeregisteret opprettet saken."
-          },
-          "beslutningstidspunkt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Tidspunktet for registreringen av beslutningen (`status`)."
-          }
         }
       },
       "Feilmelding": {

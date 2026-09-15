@@ -30,14 +30,15 @@ KOMMENTAR: Skal vi versjonere på dette nivået i urlen???
 | Hente startsekvens | `GET /api/v1/tilbakemeldinger/start` | Hente startpunkt for polling av tilbakemeldinger |
 | Hente tilbakemeldinger | `GET /api/v1/tilbakemeldinger` | Polling av nye tilbakemeldinger |
 | Slå opp melding | `GET /api/v1/tilbakemeldinger/meldinger/{avsendersMeldingsidentifikator}` | Hente tilbakemelding for en bestemt melding |
-| Slå opp sak | `GET /api/v1/tilbakemeldinger/saker/{saksnummer}` | Hente siste kjente status for en sak |
 
 ## Hva klienten henter
 
 Klienten kan hente status og resultat på to måter:
 
-- **Polling:** Kall `/tilbakemeldinger/start` én gang ved oppstart, og bruk deretter `fraSekvensnummer` og `nesteSekvensnummer` for å hente nye tilbakemeldinger fortløpende.
-- **Direkte oppslag:** Hent tilbakemelding for en bestemt melding med `avsendersMeldingsidentifikator`, eller siste kjente status for en sak med `saksnummer`.
+- **Polling (primærkilde):** Kall `/tilbakemeldinger/start` én gang ved oppstart, og bruk deretter `fraSekvensnummer` og `nesteSekvensnummer` for å hente nye tilbakemeldinger fortløpende.
+- **Direkte oppslag (supplement):** Hent siste kjente tilbakemelding for en bestemt melding med `avsendersMeldingsidentifikator`.
+
+Folkeregisteret tilbyr ikke oppslag per melding – kun en sekvensbasert hendelsesstrøm. Oppslagsendepunktet betjenes derfor av Fiks-plattformens egen indeks over denne strømmen. En melding blir først søkbar der etter at Fiks har konsumert den tilhørende hendelsen fra Folkeregisteret. Inntil da gir oppslaget `404` selv om meldingen er sendt inn og kvittert med `202`. Polling er derfor primærkilden, og direkte oppslag et supplement for gjenfinning.
 
 Alle GET-endepunktene returnerer kun data for den autentiserte klienten.
 
@@ -56,7 +57,7 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 
 - `avsendersMeldingsidentifikator` er klientens idempotensnøkkel og må være unik, bruk gjerne en UUID.
 - `kildesystem` - navn på fagsystem, fritekst. "Visma flyt barnevern", "Netcompany modulus barn"
-- `avsendersSaksreferanse` er obligatorisk og returneres i tilbakemeldinger. KS Digital prefikser med en klientid.
+- `avsendersSaksreferanse` er obligatorisk. Verdien trenger **ikke** være unik på tvers av klienter: KS Digital prefikser den med en klientidentifikator før meldingen videreformidles til Folkeregisteret, slik at referansen blir globalt unik der. Prefikset fjernes igjen før tilbakemeldinger returneres, så klienten får alltid tilbake nøyaktig den verdien den selv sendte inn. Klienten skal derfor ikke selv legge på noe prefiks, og skal matche på sin egen opprinnelige verdi.
 - `foedselsEllerDNummer` må være 11 siffer.
 - `Organisasjonsnummer` må være 9 siffer.
 - `gyldighetsdato` skal være ISO 8601 dato, for eksempel `2026-09-01`.
@@ -183,7 +184,7 @@ Eksempelrespons:
 }
 ```
 
-Bruk alltid returnert `nesteSekvensnummer` i neste kall. Ikke beregn neste verdi selv.
+Bruk alltid returnert `nesteSekvensnummer` i neste kall. Ikke beregn neste verdi selv. Sekvensnummeret tildeles av Fiks-plattformen fra en global hendelsesstrøm som filtreres per klient, så klientens serie er stigende, men kan inneholde hull.
 
 ### Betydningen av `status`, `resultatkode` og `begrunnelser`
 
