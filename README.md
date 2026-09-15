@@ -97,7 +97,7 @@ Samme felt brukes i alle operasjoner, men med ulik betydning:
 Eksempel: registrere nytt omsorgsansvar.
 
 ```bash
-curl -X POST 'https://api.test.fiks.ks.no/api/v1/omsorgsansvar/endre' \
+curl -X POST 'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/omsorgsansvar/endre' \
   -H 'Authorization: Bearer <token>' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -127,7 +127,6 @@ Typisk respons:
 
 ```json
 {
-  "saksnummer": "2026-000123",
   "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
   "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
   "status": "MOTTATT",
@@ -135,13 +134,13 @@ Typisk respons:
 }
 ```
 
-`202 Accepted` betyr bare at meldingen er mottatt for videre behandling. `status` her er Fiks-mottakets egen kvitteringsstatus (alltid `MOTTATT`) og er ikke det samme som den endelige beslutningen fra Folkeregisteret – se avsnittet om `status` i tilbakemeldinger under.
+`202 Accepted` betyr bare at meldingen er mottatt for videre behandling. `saksnummer` er ikke kjent på innsendingstidspunktet og er derfor ikke med i dette svaret – det blir først kjent asynkront og hentes senere via polling eller direkte oppslag. `status` her er Fiks-mottakets egen kvitteringsstatus (alltid `MOTTATT`) og er ikke det samme som den endelige beslutningen fra Folkeregisteret – se avsnittet om `status` i tilbakemeldinger under.
 
 ### 2. Hent startsekvens for polling
 
 ```bash
 curl -H 'Authorization: Bearer <token>' \
-  'https://api.test.fiks.ks.no/api/v1/tilbakemeldinger/start'
+  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger/start'
 ```
 
 Eksempelrespons:
@@ -156,7 +155,7 @@ Eksempelrespons:
 
 ```bash
 curl -H 'Authorization: Bearer <token>' \
-  'https://api.test.fiks.ks.no/api/v1/tilbakemeldinger?fraSekvensnummer=182734&antall=100'
+  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger?fraSekvensnummer=182734&antall=100'
 ```
 
 `antall` er valgfri, har standardverdi `100` og kan settes opptil `1000`.
@@ -238,7 +237,7 @@ Eksempel:
 
 ```bash
 curl -H 'Authorization: Bearer <token>' \
-  'https://api.test.fiks.ks.no/api/v1/tilbakemeldinger/meldinger/MSG-2026-ENDRE-0001'
+  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger/meldinger/MSG-2026-ENDRE-0001'
 ```
 
 ## Fornuftige brukseksempler
@@ -268,18 +267,8 @@ Vanlige responser:
 - `401 Unauthorized` – manglende eller ugyldig token
 - `403 Forbidden` – klienten har ikke tilgang
 - `404 Not Found` – sak eller melding finnes ikke
-- `409 Conflict` – `avsendersMeldingsidentifikator` er allerede brukt
 
-Eksempel på idempotenskonflikt:
-
-```json
-{
-  "kode": "idempotent_konflikt",
-  "melding": "avsendersMeldingsidentifikator finnes allerede for denne klienten.",
-  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
-  "saksnummer": "2026-000123"
-}
-```
+Merk: `avsendersMeldingsidentifikator` gir **ikke** et `409 Conflict` ved gjenbruk. Skatteetatens mottak støtter at samme identifikator sendes på nytt (for eksempel ved timeout uten mottatt kvittering) – dette er den tiltenkte, trygge måten å retry'e en innsending på. Send aldri en **ny** identifikator for en melding som allerede er sendt, da dette kan opprette en duplikatsak hos Folkeregisteret.
 
 ## Kilde for kontrakten
 

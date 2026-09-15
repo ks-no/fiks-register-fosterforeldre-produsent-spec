@@ -7,11 +7,11 @@
   },
   "servers": [
     {
-      "url": "https://api.test.fiks.ks.no",
+      "url": "https://api.test.fiks.ks.no/folkeregister/produsent",
       "description": "Test"
     },
     {
-      "url": "https://api.fiks.ks.no",
+      "url": "https://api.fiks.ks.no/folkeregister/produsent",
       "description": "Produksjon"
     }
   ],
@@ -73,9 +73,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
-          },
-          "409": {
-            "$ref": "#/components/responses/Conflict"
           }
         }
       }
@@ -115,9 +112,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
-          },
-          "409": {
-            "$ref": "#/components/responses/Conflict"
           }
         }
       }
@@ -157,9 +151,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
-          },
-          "409": {
-            "$ref": "#/components/responses/Conflict"
           }
         }
       }
@@ -199,9 +190,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
-          },
-          "409": {
-            "$ref": "#/components/responses/Conflict"
           }
         }
       }
@@ -241,9 +229,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
-          },
-          "409": {
-            "$ref": "#/components/responses/Conflict"
           }
         }
       }
@@ -489,10 +474,7 @@
                   "melding": "Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
                   "httpStatus": 400,
                   "alvorlighetsgrad": "WARNING",
-                  "tilleggsinformasjon": {
-                    "felt": "barn.foedselsEllerDNummer",
-                    "regel": "^[0-9]{11}$"
-                  },
+                  "tilleggsinformasjon": "felt=barn.foedselsEllerDNummer, regel=^[0-9]{11}$",
                   "korrelasjonsid": "56a8ad5a81ec4cf4aa4f790507cd66a0"
                 }
               }
@@ -505,28 +487,6 @@
       },
       "Forbidden": {
         "description": "Ikke tilgang."
-      },
-      "Conflict": {
-        "description": "Konflikt, typisk duplikat `avsendersMeldingsidentifikator`.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/IdempotensKonflikt"
-            },
-            "examples": {
-              "duplikatMeldingsid": {
-                "summary": "Samme avsendersMeldingsidentifikator er allerede brukt",
-                "value": {
-                  "kode": "idempotent_konflikt",
-                  "melding": "avsendersMeldingsidentifikator finnes allerede for denne klienten.",
-                  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
-                  "saksnummer": "2026-000123",
-                  "korrelasjonsid": "0f7dd0f8fefe4f839146d0fbac9af510"
-                }
-              }
-            }
-          }
-        }
       },
       "NotFound": {
         "description": "Ressurs ikke funnet.",
@@ -652,22 +612,24 @@
       },
       "InnsendingKvittering": {
         "type": "object",
+        "description": "Synkron kvittering fra Fiks-mottaket. Tilsvarer Folkeregisterets `<meldingMottatt>`-svar pa selve innsendingen: kun `folkeregisterReferanse` og `avsendersMeldingsidentifikator` er kjent pa dette tidspunktet. `saksnummer` og videre saksbehandlingsstatus blir forst kjent asynkront og ma hentes via polling eller direkte oppslag.",
         "required": [
-          "saksnummer",
+          "folkeregisterReferanse",
           "avsendersMeldingsidentifikator",
           "status",
           "mottattTidspunkt"
         ],
         "properties": {
-          "saksnummer": {
-            "type": "string"
-          },
           "folkeregisterReferanse": {
             "type": "string",
             "description": "Tekst-referanse returnert fra Folkeregisterets mottak ved akseptert innsending."
           },
           "avsendersMeldingsidentifikator": {
             "type": "string"
+          },
+          "saksnummer": {
+            "type": "string",
+            "description": "Saksnummer hos Folkeregisteret. Ikke kjent pa innsendingstidspunktet og derfor ikke med i dette svaret; hentes senere via polling eller direkte oppslag."
           },
           "status": {
             "type": "string",
@@ -682,7 +644,6 @@
           }
         },
         "example": {
-          "saksnummer": "2026-000123",
           "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
           "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
           "status": "MOTTATT",
@@ -879,43 +840,6 @@
           }
         }
       },
-      "IdempotensKonflikt": {
-        "type": "object",
-        "description": "Returneres nar samme `avsendersMeldingsidentifikator` allerede er brukt av klienten.",
-        "required": [
-          "kode",
-          "melding",
-          "avsendersMeldingsidentifikator"
-        ],
-        "properties": {
-          "kode": {
-            "type": "string",
-            "example": "idempotent_konflikt"
-          },
-          "melding": {
-            "type": "string",
-            "example": "avsendersMeldingsidentifikator finnes allerede for denne klienten."
-          },
-          "avsendersMeldingsidentifikator": {
-            "type": "string"
-          },
-          "saksnummer": {
-            "type": "string",
-            "description": "Saksreferanse for eksisterende innsending nar kjent."
-          },
-          "korrelasjonsid": {
-            "type": "string",
-            "description": "Kan brukes ved supporthenvendelser."
-          }
-        },
-        "example": {
-          "kode": "idempotent_konflikt",
-          "melding": "avsendersMeldingsidentifikator finnes allerede for denne klienten.",
-          "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
-          "saksnummer": "2026-000123",
-          "korrelasjonsid": "0f7dd0f8fefe4f839146d0fbac9af510"
-        }
-      },
       "Feilmelding": {
         "type": "object",
         "required": [
@@ -949,9 +873,8 @@
             "example": "WARNING"
           },
           "tilleggsinformasjon": {
-            "type": "object",
-            "description": "Valgfrie detaljer fra Skatteetaten nar tilgjengelig.",
-            "additionalProperties": true
+            "type": "string",
+            "description": "Valgfri fritekst med tilleggsdetaljer fra Skatteetaten nar tilgjengelig. Feltet er ustrukturert fritekst i Folkeregisterets feilmelding (`<tilleggsinformasjon>`) og har ikke et fast format."
           },
           "korrelasjonsid": {
             "type": "string",
@@ -964,10 +887,7 @@
           "melding": "Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
           "httpStatus": 400,
           "alvorlighetsgrad": "WARNING",
-          "tilleggsinformasjon": {
-            "felt": "barn.foedselsEllerDNummer",
-            "regel": "^[0-9]{11}$"
-          },
+          "tilleggsinformasjon": "felt=barn.foedselsEllerDNummer, regel=^[0-9]{11}$",
           "korrelasjonsid": "56a8ad5a81ec4cf4aa4f790507cd66a0"
         }
       }
