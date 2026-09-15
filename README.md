@@ -39,7 +39,6 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 - `barn.foedselsEllerDNummer`
 - `forelder.foedselsEllerDNummer`
 - `barnevernstjeneste.ansvarligBarnevernstjeneste`
-- `vedlegg[]` (valgfritt) - skal bort.
 
 ### Viktige regler
 
@@ -50,7 +49,6 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 - `Organisasjonsnummer` må være 9 siffer.
 - `avsendersInnsendingstidspunkt` skal være ISO 8601 dato-tid, for eksempel `2026-09-07T11:30:00+02:00` eller `2026-09-09T09:12:31Z`.
 - `gyldighetsdato` skal være ISO 8601 dato, for eksempel `2026-09-01`.
-- `vedlegg` støtter `application/pdf`, `image/png` og `image/jpeg`.
 
 ### Felter som ikke skal sendes av klienten
 

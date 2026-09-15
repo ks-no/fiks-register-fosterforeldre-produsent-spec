@@ -28,7 +28,6 @@ Backend api for skatteetatetn dokumentasjon: https://skatteetaten.github.io/folk
 - Payload er JSON (ikke XML).
 - `forespoerseltype` eksponeres ikke i offentlig request-payload; operasjonen bestemmes av valgt endepunkt.
 - `innsendertype` eksponeres ikke i offentlig request-payload; verdien settes internt ved videreformidling til backend.
-- Vedlegg stoettes som `vedlegg` (base64) i API-kontrakten.
 - `mottak` eksponeres ikke i det offentlige API-et; dette settes internt av mottakslosningen for videreformidling til backend.
 
 ## Polling og oppslag

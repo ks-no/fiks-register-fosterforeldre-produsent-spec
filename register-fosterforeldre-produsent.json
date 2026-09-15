@@ -3,7 +3,7 @@
   "info": {
     "title": "Fosterforeldre Omsorgsansvar Innsending API",
     "version": "v1",
-    "description": "Brukervennlig JSON API for innsending av meldinger om endring av omsorgsansvar, med asynkron tilbakemelding via polling. Payloaden er domenetilpasset og skjuler intern XML/XSD-struktur.\n\nForesporselstyper:\n- Endre: Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist.\n- Opphoere: Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene.\n- Korrigere: Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen.\n- Annullere: Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig.\n- Overfoere: Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen."
+    "description": "Brukervennlig API for innsending av meldinger om endring av omsorgsansvar, med asynkron tilbakemelding via polling. Payloaden er domenetilpasset og skjuler intern XML/XSD-struktur. Innsending bruker `application/json`.\n\nForesporselstyper:\n- Endre: Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist.\n- Opphoere: Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene.\n- Korrigere: Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen.\n- Annullere: Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig.\n- Overfoere: Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen."
   },
   "servers": [
     {
@@ -45,6 +45,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EndreRequest"
+              },
+              "examples": {
+                "melding": {
+                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                }
               }
             }
           }
@@ -89,6 +94,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/KorrigereRequest"
+              },
+              "examples": {
+                "melding": {
+                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                }
               }
             }
           }
@@ -126,6 +136,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/OpphoereRequest"
+              },
+              "examples": {
+                "melding": {
+                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                }
               }
             }
           }
@@ -163,6 +178,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AnnullereRequest"
+              },
+              "examples": {
+                "melding": {
+                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                }
               }
             }
           }
@@ -200,6 +220,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/OverfoereRequest"
+              },
+              "examples": {
+                "melding": {
+                  "$ref": "#/components/examples/OmsorgsansvarEksempel"
+                }
               }
             }
           }
@@ -411,6 +436,33 @@
         "bearerFormat": "JWT"
       }
     },
+    "examples": {
+      "OmsorgsansvarEksempel": {
+        "summary": "Melding om endring av omsorgsansvar",
+        "value": {
+          "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+          "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
+          "kildesystem": "Visma Flyt Barnevern",
+          "avsendersInnsendingstidspunkt": "2026-09-07T11:30:00+02:00",
+          "gyldighetsdato": "2026-09-01",
+          "innsender": [
+            {
+              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
+              "barnevernstjeneste": "123456789"
+            }
+          ],
+          "barn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "forelder": {
+            "foedselsEllerDNummer": "02020223456"
+          },
+          "barnevernstjeneste": {
+            "ansvarligBarnevernstjeneste": "111222333"
+          }
+        }
+      }
+    },
     "responses": {
       "Accepted": {
         "description": "Melding mottatt for asynkron behandling.",
@@ -491,40 +543,7 @@
     },
     "schemas": {
       "EndreRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OmsorgsansvarEndringRequest"
-          }
-        ],
-        "example": {
-          "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
-          "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
-          "kildesystem": "Visma Flyt Barnevern",
-          "avsendersInnsendingstidspunkt": "2026-09-07T11:30:00+02:00",
-          "gyldighetsdato": "2026-09-01",
-          "innsender": [
-            {
-              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-              "barnevernstjeneste": "123456789"
-            }
-          ],
-          "barn": {
-            "foedselsEllerDNummer": "01010112345"
-          },
-          "forelder": {
-            "foedselsEllerDNummer": "02020223456"
-          },
-          "barnevernstjeneste": {
-            "ansvarligBarnevernstjeneste": "111222333"
-          },
-          "vedlegg": [
-            {
-              "filnavn": "vedtak.pdf",
-              "innholdstype": "application/pdf",
-              "innholdBase64": "UERG"
-            }
-          ]
-        }
+        "$ref": "#/components/schemas/OmsorgsansvarEndringRequest"
       },
       "KorrigereRequest": {
         "$ref": "#/components/schemas/OmsorgsansvarEndringRequest"
@@ -594,13 +613,6 @@
           },
           "barnevernstjeneste": {
             "$ref": "#/components/schemas/Barnevernstjeneste"
-          },
-          "vedlegg": {
-            "type": "array",
-            "description": "Valgfrie vedlegg kodet i base64.",
-            "items": {
-              "$ref": "#/components/schemas/Vedlegg"
-            }
           }
         }
       },
@@ -643,33 +655,6 @@
           "ansvarligBarnevernstjeneste": {
             "type": "string",
             "pattern": "^[0-9]{9}$"
-          }
-        }
-      },
-      "Vedlegg": {
-        "type": "object",
-        "required": [
-          "filnavn",
-          "innholdstype",
-          "innholdBase64"
-        ],
-        "properties": {
-          "filnavn": {
-            "type": "string",
-            "maxLength": 255
-          },
-          "innholdstype": {
-            "type": "string",
-            "enum": [
-              "application/pdf",
-              "image/png",
-              "image/jpeg"
-            ]
-          },
-          "innholdBase64": {
-            "type": "string",
-            "format": "byte",
-            "description": "Filinnhold kodet i base64."
           }
         }
       },
