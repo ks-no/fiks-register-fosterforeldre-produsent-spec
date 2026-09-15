@@ -12,7 +12,7 @@ API-et er asynkront:
 - Test: `https://api.test.fiks.ks.no/folkeregister/produsent`
 - Produksjon: `https://api.fiks.ks.no/folkeregister/produsent`
 
-Alle endepunkter krever `Authorization: Bearer <token>`.
+Alle endepunkter krever Fiks integrasjon innlogging med maskinporten.
 
 ## Hva klienten sender inn
 
