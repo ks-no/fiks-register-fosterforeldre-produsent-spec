@@ -27,13 +27,25 @@ KOMMENTAR: Skal vi versjonere på dette nivået i urlen???
 | Opphøre | `POST /api/v1/omsorgsansvar/opphoere` | Avslutte omsorgsansvar |
 | Annullere | `POST /api/v1/omsorgsansvar/annullere` | Fjerne en registrering som aldri skulle vært gyldig |
 | Overføre | `POST /api/v1/omsorgsansvar/overfoere` | Overføre omsorgsansvar til annen barnevernstjeneste |
+| Hente startsekvens | `GET /api/v1/tilbakemeldinger/start` | Hente startpunkt for polling av tilbakemeldinger |
+| Hente tilbakemeldinger | `GET /api/v1/tilbakemeldinger` | Polling av nye tilbakemeldinger |
+| Slå opp melding | `GET /api/v1/tilbakemeldinger/meldinger/{avsendersMeldingsidentifikator}` | Hente tilbakemelding for en bestemt melding |
+| Slå opp sak | `GET /api/v1/tilbakemeldinger/saker/{saksnummer}` | Hente siste kjente status for en sak |
+
+## Hva klienten henter
+
+Klienten kan hente status og resultat på to måter:
+
+- **Polling:** Kall `/tilbakemeldinger/start` én gang ved oppstart, og bruk deretter `fraSekvensnummer` og `nesteSekvensnummer` for å hente nye tilbakemeldinger fortløpende.
+- **Direkte oppslag:** Hent tilbakemelding for en bestemt melding med `avsendersMeldingsidentifikator`, eller siste kjente status for en sak med `saksnummer`.
+
+Alle GET-endepunktene returnerer kun data for den autentiserte klienten.
 
 Alle fem operasjoner bruker samme offentlige JSON-struktur:
 
 - `avsendersMeldingsidentifikator`
 - `avsendersSaksreferanse`
 - `kildesystem`
-- `avsendersInnsendingstidspunkt`
 - `gyldighetsdato`
 - `innsender[]` TODO: blir kun en 
 - `barn.foedselsEllerDNummer`
@@ -47,7 +59,6 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 - `avsendersSaksreferanse` er obligatorisk og returneres i tilbakemeldinger. KS Digital prefikser med en klientid.
 - `foedselsEllerDNummer` må være 11 siffer.
 - `Organisasjonsnummer` må være 9 siffer.
-- `avsendersInnsendingstidspunkt` skal være ISO 8601 dato-tid, for eksempel `2026-09-07T11:30:00+02:00` eller `2026-09-09T09:12:31Z`.
 - `gyldighetsdato` skal være ISO 8601 dato, for eksempel `2026-09-01`.
 
 ### Felter som ikke skal sendes av klienten
@@ -64,7 +75,8 @@ Disse feltene settes internt av løsningen:
 - `forespoerseltype` utledes av valgt endepunkt.
 - `innsender[].innsendertype` settes til `barnevernstjenesten`.
 - `mottak.informasjonskanal` settes til `elektroniskMelding`.
-- `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet Fiks mottar requesten.
+- `avsendersInnsendingstidspunkt` settes til tidspunktet meldingen sendes fra Fiks til Skatteetaten.
+- `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet Fiks mottar requesten fra klienten.
 
 ## Betydningen av `gyldighetsdato`
 
@@ -92,7 +104,6 @@ curl -X POST 'https://api.test.fiks.ks.no/api/v1/omsorgsansvar/endre' \
     "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
     "avsendersSaksreferanse": "SAK-2026-0001",
     "kildesystem": "Visma Flyt Barnevern",
-    "avsendersInnsendingstidspunkt": "2026-09-07T11:30:00+02:00",
     "gyldighetsdato": "2026-09-01",
     "innsender": [
       {
@@ -176,14 +187,9 @@ Eksempelrespons:
 
 Bruk alltid returnert `nesteSekvensnummer` i neste kall. Ikke beregn neste verdi selv.
 
-## Oppslag ved behov
+### Eksempel på direkte oppslag
 
-Klienten kan også gjøre direkte oppslag:
-
-- `GET /api/v1/tilbakemeldinger/meldinger/{avsendersMeldingsidentifikator}`
-- `GET /api/v1/tilbakemeldinger/saker/{saksnummer}`
-
-Dette er nyttig ved retry, feilsøking og gjenfinning av tidligere innsendinger.
+Direkte oppslag er nyttig ved retry, feilsøking og gjenfinning av tidligere innsendinger.
 
 Eksempel:
 
@@ -253,7 +259,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
   "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0101",
   "avsendersSaksreferanse": "SAK-2026-1001",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-01T10:15:00+02:00",
   "gyldighetsdato": "2026-09-01",
   "innsender": [
     {
@@ -287,7 +292,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
   "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0102",
   "avsendersSaksreferanse": "SAK-2026-1001",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-02T09:00:00+02:00",
   "gyldighetsdato": "2026-09-01",
   "innsender": [
     {
@@ -325,7 +329,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0201",
   "avsendersSaksreferanse": "SAK-2026-1002",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-05T08:45:00+02:00",
   "gyldighetsdato": "2026-09-01",
   "innsender": [
     {
@@ -354,7 +357,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
   "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0301",
   "avsendersSaksreferanse": "SAK-2026-1002",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-05T08:50:00+02:00",
   "gyldighetsdato": "2026-09-01",
   "innsender": [
     {
@@ -388,7 +390,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0202",
   "avsendersSaksreferanse": "SAK-2026-1003",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-06T10:20:00+02:00",
   "gyldighetsdato": "2026-08-15",
   "innsender": [
     {
@@ -425,7 +426,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
   "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0401",
   "avsendersSaksreferanse": "SAK-2026-1004",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-10-01T08:00:00+02:00",
   "gyldighetsdato": "2026-10-01",
   "innsender": [
     {
@@ -463,7 +463,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
   "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0402",
   "avsendersSaksreferanse": "SAK-2026-1005",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-30T12:00:00+02:00",
   "gyldighetsdato": "2026-09-30",
   "innsender": [
     {
@@ -492,7 +491,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
   "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0103",
   "avsendersSaksreferanse": "SAK-2026-1005",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-10-01T09:00:00+02:00",
   "gyldighetsdato": "2026-10-01",
   "innsender": [
     {
@@ -526,7 +524,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/overfoere`
   "avsendersMeldingsidentifikator": "MSG-2026-OVERFOERE-0501",
   "avsendersSaksreferanse": "SAK-2026-1006",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-11-01T10:00:00+01:00",
   "gyldighetsdato": "2026-11-01",
   "innsender": [
     {
@@ -563,7 +560,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
   "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0302",
   "avsendersSaksreferanse": "SAK-2026-1007",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-09-10T13:10:00+02:00",
   "gyldighetsdato": "2026-09-01",
   "innsender": [
     {
@@ -600,7 +596,6 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0203",
   "avsendersSaksreferanse": "SAK-2026-1008-KORR",
   "kildesystem": "Visma Flyt Barnevern",
-  "avsendersInnsendingstidspunkt": "2026-12-15T14:30:00+01:00",
   "gyldighetsdato": "2026-09-01",
   "innsender": [
     {
@@ -619,6 +614,3 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   }
 }
 ```
-
-
-

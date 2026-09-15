@@ -443,7 +443,6 @@
           "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
           "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
           "kildesystem": "Visma Flyt Barnevern",
-          "avsendersInnsendingstidspunkt": "2026-09-07T11:30:00+02:00",
           "gyldighetsdato": "2026-09-01",
           "innsender": [
             {
@@ -564,7 +563,6 @@
           "avsendersMeldingsidentifikator",
           "avsendersSaksreferanse",
           "kildesystem",
-          "avsendersInnsendingstidspunkt",
           "gyldighetsdato",
           "innsender",
           "barn",
@@ -586,11 +584,6 @@
             "type": "string",
             "maxLength": 4000,
             "description": "Navn pa avgivende kildesystem."
-          },
-          "avsendersInnsendingstidspunkt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Tidspunkt da meldingen ble sendt fra klienten."
           },
           "gyldighetsdato": {
             "type": "string",
