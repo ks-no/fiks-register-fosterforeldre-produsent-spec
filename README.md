@@ -9,8 +9,8 @@ API-et er asynkront:
 
 ## Base-URL-er
 
-- Test: `https://api.test.fiks.ks.no`
-- Produksjon: `https://api.fiks.ks.no`
+- Test: `https://api.test.fiks.ks.no/folkeregister/produsent`
+- Produksjon: `https://api.fiks.ks.no/folkeregister/produsent`
 
 Alle endepunkter krever `Authorization: Bearer <token>`.
 
