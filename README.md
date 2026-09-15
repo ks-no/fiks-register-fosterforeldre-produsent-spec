@@ -135,7 +135,7 @@ Typisk respons:
 }
 ```
 
-`202 Accepted` betyr bare at meldingen er mottatt for videre behandling.
+`202 Accepted` betyr bare at meldingen er mottatt for videre behandling. `status` her er Fiks-mottakets egen kvitteringsstatus (alltid `MOTTATT`) og er ikke det samme som den endelige beslutningen fra Folkeregisteret – se avsnittet om `status` i tilbakemeldinger under.
 
 ### 2. Hent startsekvens for polling
 
@@ -174,16 +174,61 @@ Eksempelrespons:
       "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
       "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
       "avsendersSaksreferanse": "SAK-2026-0001",
-      "status": "FERDIGBEHANDLET",
-      "resultatkode": "FREG-OK",
-      "resultatbeskrivelse": "Meldingen er ferdig behandlet.",
-      "oppdatertTidspunkt": "2026-09-09T09:13:05Z"
+      "status": "REGISTRERT",
+      "resultatkode": "skalEndre",
+      "resultatbeskrivelse": "Omsorgsansvar skal endres",
+      "opprettetTidspunkt": "2026-09-09T09:12:45Z",
+      "beslutningstidspunkt": "2026-09-09T09:13:05Z"
     }
   ]
 }
 ```
 
 Bruk alltid returnert `nesteSekvensnummer` i neste kall. Ikke beregn neste verdi selv.
+
+### Betydningen av `status`, `resultatkode` og `begrunnelser`
+
+`status` i en tilbakemelding tilsvarer feltet `Beslutning` fra Folkeregisteret, og har følgende mulige verdier. Per nåværende dokumentasjon er kun `AVVIST` og `REGISTRERT` i aktiv bruk:
+
+| Verdi | Betydning |
+|---|---|
+| `GODKJENT` | Godkjent |
+| `AVSLAATT` | Avslått |
+| `AVVIST` | Avvist |
+| `AVBRUTT` | Avbrutt |
+| `REGISTRERT` | Registrert |
+
+`resultatkode` er en maskinlesbar kode fra Folkeregisteret. Kjente verdier per nåværende dokumentasjon:
+
+| Kode | Betydning |
+|---|---|
+| `skalEndre` | Omsorgsansvar skal endres |
+| `skalIkkeEndre` | Omsorgsansvar skal ikke endres |
+| `skalKorrigere` | Omsorgsansvar skal korrigeres |
+| `skalIkkeKorrigere` | Omsorgsansvar skal ikke korrigeres |
+| `skalOpphøre` | Omsorgsansvar skal opphøre |
+| `skalIkkeOpphøre` | Omsorgsansvar skal ikke opphøre |
+| `skalAnnullere` | Omsorgsansvar skal annulleres |
+| `SkalIkkeAnnullere` | Omsorgsansvar skal ikke annulleres (casing som dokumentert av Skatteetaten) |
+| `skalOverføres` | Omsorgsansvar skal overføres |
+| `skalIkkeOverføres` | Omsorgsansvar skal ikke overføres |
+
+`begrunnelser` er en liste som beskriver hvorfor en sak er avvist eller har en merknad. Hver oppføring har `begrunnelseskode` (maskinlesbar), `begrunnelsesnavn` (lesbar forklaring) og en valgfri `begrunnelsesmerknad`. Kjente koder per nåværende dokumentasjon (listen er under arbeid hos Skatteetaten og kan utvides):
+
+| begrunnelseskode | begrunnelsesnavn |
+|---|---|
+| `identifikatorForBarnFinnesIkke` | Barnets fødsels- eller d-nummer er ikke tildelt en person |
+| `identifikatorForBarnErIkkeGjeldende` | Opphørt fødsels- eller d-nummer for barn |
+| `ugyldigBarn` | Barn har personstatus som ikke er forenelig med å ha fosterforelder |
+| `identifikatorForForelderFinnesIkke` | Forelderens fødsels- eller d-nummer er ikke tildelt en person |
+| `identifikatorForForelderErIkkeGjeldende` | Opphørt fødsels- eller d-nummer for forelderen |
+| `ugyldigForelder` | Forelderen har personstatus som ikke er forenelig med å ha fosterbarn |
+| `vedtaksdatoErFramtidEllerFeil` | Angitt vedtaksdato er i framtid eller feil |
+| `gjeldendeOmsorgsansvarFinnesAllerede` | Forespørselstype er `endre`, men det finnes allerede et aktivt omsorgsansvar mellom barnet og fosterforelder |
+| `finnerIkkeOmsorgsansvarSomKanSlettes` | Forespørselstype er `annullere`, men det finnes ikke et aktivt omsorgsansvar å annullere |
+| `finnerIkkeOmsorgsansvarSomKanEndres` | Forespørselstype er `korrigere`, men det finnes ikke et aktivt omsorgsansvar å korrigere |
+| `gyldighetstidspunktForTidlig` | Gyldighetstidspunktet fører til at denne registreringen blir historisk |
+| `gyldighetstidspunktForSent` | Kan ikke legge inn fosterforelder-ansvar fram i tid |
 
 ### Eksempel på direkte oppslag
 

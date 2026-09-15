@@ -664,8 +664,7 @@
           },
           "folkeregisterReferanse": {
             "type": "string",
-            "format": "uuid",
-            "description": "Referanse returnert fra Folkeregisterets mottak ved akseptert innsending."
+            "description": "Tekst-referanse returnert fra Folkeregisterets mottak ved akseptert innsending."
           },
           "avsendersMeldingsidentifikator": {
             "type": "string"
@@ -673,12 +672,9 @@
           "status": {
             "type": "string",
             "enum": [
-              "MOTTATT",
-              "UNDER_BEHANDLING",
-              "FERDIGBEHANDLET",
-              "AVVIST",
-              "TRENGER_MANUELL_BEHANDLING"
-            ]
+              "MOTTATT"
+            ],
+            "description": "Fiks-mottakets egen kvitteringsstatus ved synkron mottak av meldingen, for Folkeregisteret har fattet en beslutning. Endelig utfall (se `Beslutning` i tilbakemeldinger) hentes via polling eller direkte oppslag."
           },
           "mottattTidspunkt": {
             "type": "string",
@@ -739,7 +735,8 @@
           "saksnummer",
           "avsendersMeldingsidentifikator",
           "status",
-          "oppdatertTidspunkt"
+          "opprettetTidspunkt",
+          "beslutningstidspunkt"
         ],
         "properties": {
           "sekvensnummer": {
@@ -752,8 +749,7 @@
           },
           "folkeregisterReferanse": {
             "type": "string",
-            "format": "uuid",
-            "description": "Referanse fra Folkeregisteret for opprinnelig innsending."
+            "description": "Tekst-referanse fra Folkeregisteret for opprinnelig innsending."
           },
           "avsendersMeldingsidentifikator": {
             "type": "string"
@@ -764,24 +760,38 @@
           "status": {
             "type": "string",
             "enum": [
-              "MOTTATT",
-              "UNDER_BEHANDLING",
-              "FERDIGBEHANDLET",
+              "GODKJENT",
+              "AVSLAATT",
               "AVVIST",
-              "TRENGER_MANUELL_BEHANDLING"
-            ]
+              "AVBRUTT",
+              "REGISTRERT"
+            ],
+            "description": "Tilsvarer `Beslutning` fra Folkeregisteret. Per naerende dokumentasjon er kun `AVVIST` og `REGISTRERT` i aktiv bruk."
           },
           "resultatkode": {
             "type": "string",
-            "description": "Maskinlesbar kode fra backend/Folkeregisteret."
+            "description": "Maskinlesbar kode fra backend/Folkeregisteret. Se README for fullstendig liste over kjente verdier."
           },
           "resultatbeskrivelse": {
             "type": "string",
             "description": "Lesbar beskrivelse av resultat."
           },
-          "oppdatertTidspunkt": {
+          "begrunnelser": {
+            "type": "array",
+            "description": "Liste med begrunnelser for hvorfor saken er avvist eller har merknad. Kan vaere fravaerende eller tom nar det ikke finnes merknader.",
+            "items": {
+              "$ref": "#/components/schemas/Begrunnelse"
+            }
+          },
+          "opprettetTidspunkt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Tidspunkt for nar Folkeregisteret opprettet saken."
+          },
+          "beslutningstidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Tidspunktet for registreringen av beslutningen (`status`)."
           }
         },
         "example": {
@@ -790,10 +800,37 @@
           "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
           "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
           "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
-          "status": "FERDIGBEHANDLET",
-          "resultatkode": "FREG-OK",
-          "resultatbeskrivelse": "Meldingen er ferdig behandlet.",
-          "oppdatertTidspunkt": "2026-09-09T09:13:05Z"
+          "status": "REGISTRERT",
+          "resultatkode": "skalEndre",
+          "resultatbeskrivelse": "Omsorgsansvar skal endres",
+          "opprettetTidspunkt": "2026-09-09T09:12:45Z",
+          "beslutningstidspunkt": "2026-09-09T09:13:05Z"
+        }
+      },
+      "Begrunnelse": {
+        "type": "object",
+        "required": [
+          "begrunnelseskode",
+          "begrunnelsesnavn"
+        ],
+        "properties": {
+          "begrunnelseskode": {
+            "type": "string",
+            "description": "Maskinlesbar avvikskode. Se README for fullstendig liste over kjente koder. Listen kan utvides av Skatteetaten."
+          },
+          "begrunnelsesnavn": {
+            "type": "string",
+            "description": "Lesbar forklaring pa avviket."
+          },
+          "begrunnelsesmerknad": {
+            "type": "string",
+            "description": "Valgfri tilleggsmerknad, for eksempel ny identifikator eller personstatus."
+          }
+        },
+        "example": {
+          "begrunnelseskode": "identifikatorForBarnErIkkeGjeldende",
+          "begrunnelsesnavn": "Opphort fodsels- eller d-nummer for barn",
+          "begrunnelsesmerknad": "Barnet er tildelt ny identifikator i Folkeregisteret, 12345678910"
         }
       },
       "SakStatus": {
@@ -802,7 +839,8 @@
           "saksnummer",
           "avsendersMeldingsidentifikator",
           "status",
-          "oppdatertTidspunkt"
+          "opprettetTidspunkt",
+          "beslutningstidspunkt"
         ],
         "properties": {
           "saksnummer": {
@@ -814,16 +852,30 @@
           "status": {
             "type": "string",
             "enum": [
-              "MOTTATT",
-              "UNDER_BEHANDLING",
-              "FERDIGBEHANDLET",
+              "GODKJENT",
+              "AVSLAATT",
               "AVVIST",
-              "TRENGER_MANUELL_BEHANDLING"
-            ]
+              "AVBRUTT",
+              "REGISTRERT"
+            ],
+            "description": "Tilsvarer `Beslutning` fra Folkeregisteret. Per naerende dokumentasjon er kun `AVVIST` og `REGISTRERT` i aktiv bruk."
           },
-          "oppdatertTidspunkt": {
+          "begrunnelser": {
+            "type": "array",
+            "description": "Liste med begrunnelser for hvorfor saken er avvist eller har merknad. Kan vaere fravaerende eller tom nar det ikke finnes merknader.",
+            "items": {
+              "$ref": "#/components/schemas/Begrunnelse"
+            }
+          },
+          "opprettetTidspunkt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Tidspunkt for nar Folkeregisteret opprettet saken."
+          },
+          "beslutningstidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Tidspunktet for registreringen av beslutningen (`status`)."
           }
         }
       },
