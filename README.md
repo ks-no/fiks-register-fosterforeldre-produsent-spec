@@ -55,7 +55,7 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 
 ### Viktige regler
 
-- `avsendersMeldingsidentifikator` er klientens idempotensnøkkel og må være unik, bruk gjerne en UUID.
+- `avsendersMeldingsidentifikator` er klientens idempotensnøkkel, må være en UUID og må være unik.
 - `kildesystem` - navn på fagsystem, fritekst. "Visma flyt barnevern", "Netcompany modulus barn"
 - `avsendersSaksreferanse` er obligatorisk. Verdien trenger **ikke** være unik på tvers av klienter: KS Digital prefikser den med en klientidentifikator før meldingen videreformidles til Folkeregisteret, slik at referansen blir globalt unik der. Prefikset fjernes igjen før tilbakemeldinger returneres, så klienten får alltid tilbake nøyaktig den verdien den selv sendte inn. Klienten skal derfor ikke selv legge på noe prefiks, og skal matche på sin egen opprinnelige verdi.
 - `foedselsEllerDNummer` må være 11 siffer.
@@ -102,7 +102,7 @@ curl -X POST 'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/omsorgs
   -H 'Authorization: Bearer <token>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+    "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
     "avsendersSaksreferanse": "SAK-2026-0001",
     "kildesystem": "Visma Flyt Barnevern",
     "gyldighetsdato": "2026-09-01",
@@ -129,7 +129,7 @@ Typisk respons:
 ```json
 {
   "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+  "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
   "status": "MOTTATT",
   "mottattTidspunkt": "2026-09-09T09:12:31Z"
 }
@@ -172,7 +172,7 @@ Eksempelrespons:
       "sekvensnummer": 182734,
       "saksnummer": "2026-000123",
       "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-      "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+      "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
       "avsendersSaksreferanse": "SAK-2026-0001",
       "status": "REGISTRERT",
       "resultatkode": "skalEndre",
@@ -238,7 +238,7 @@ Eksempel:
 
 ```bash
 curl -H 'Authorization: Bearer <token>' \
-  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger/meldinger/MSG-2026-ENDRE-0001'
+  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger/meldinger/93c2ac1b-cc37-4a04-a282-cbc918378f47'
 ```
 
 ## Fornuftige brukseksempler
@@ -288,7 +288,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0101",
+  "avsendersMeldingsidentifikator": "eb720d73-19f0-4b41-b2a5-19af13d6ae2c",
   "avsendersSaksreferanse": "SAK-2026-1001",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
@@ -321,7 +321,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0102",
+  "avsendersMeldingsidentifikator": "1a184538-ce09-45fa-9a8b-073a40fabc78",
   "avsendersSaksreferanse": "SAK-2026-1001",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
@@ -358,7 +358,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0201",
+  "avsendersMeldingsidentifikator": "a9117417-dae0-4a94-a5bf-8ace3b929b05",
   "avsendersSaksreferanse": "SAK-2026-1002",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
@@ -386,7 +386,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0301",
+  "avsendersMeldingsidentifikator": "2ae44829-e462-4d44-87b1-8c8176b329dd",
   "avsendersSaksreferanse": "SAK-2026-1002",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
@@ -419,7 +419,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0202",
+  "avsendersMeldingsidentifikator": "9383cb81-9865-4f0c-9b8a-a4420b5eb281",
   "avsendersSaksreferanse": "SAK-2026-1003",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-08-15",
@@ -455,7 +455,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0401",
+  "avsendersMeldingsidentifikator": "21ec08f7-2fab-48a2-96fd-30da886615a8",
   "avsendersSaksreferanse": "SAK-2026-1004",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-10-01",
@@ -492,7 +492,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0402",
+  "avsendersMeldingsidentifikator": "fbc07f2f-7939-4ba4-af04-506fa7c8bb87",
   "avsendersSaksreferanse": "SAK-2026-1005",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-30",
@@ -520,7 +520,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0103",
+  "avsendersMeldingsidentifikator": "45328e06-3042-4006-ab06-6bcae5fa9008",
   "avsendersSaksreferanse": "SAK-2026-1005",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-10-01",
@@ -553,7 +553,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/overfoere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-OVERFOERE-0501",
+  "avsendersMeldingsidentifikator": "13419ce5-c5c2-4a10-8d30-9edc112bcadc",
   "avsendersSaksreferanse": "SAK-2026-1006",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-11-01",
@@ -589,7 +589,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0302",
+  "avsendersMeldingsidentifikator": "2c508967-984b-480d-8980-3ea99d27ede1",
   "avsendersSaksreferanse": "SAK-2026-1007",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
@@ -625,7 +625,7 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
 
 ```json
 {
-  "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0203",
+  "avsendersMeldingsidentifikator": "6f7c18df-89e3-438c-a981-7b03b7905b0d",
   "avsendersSaksreferanse": "SAK-2026-1008-KORR",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",

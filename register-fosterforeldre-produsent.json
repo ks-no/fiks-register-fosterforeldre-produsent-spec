@@ -336,7 +336,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "maxLength": 4000
+              "format": "uuid"
             }
           }
         ],
@@ -377,7 +377,7 @@
         "summary": "Endring av omsorgsansvar",
         "description": "`gyldighetsdato` er datoen omsorgsansvaret gjelder fra.",
         "value": {
-          "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+          "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
           "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-09-01",
@@ -402,7 +402,7 @@
         "summary": "Korrigering av eksisterende omsorgsansvar",
         "description": "`gyldighetsdato` er gyldig fra-datoen for den korrigerte oppforingen, og erstatter datoen i den opprinnelige meldingen.",
         "value": {
-          "avsendersMeldingsidentifikator": "MSG-2026-KORRIGERE-0001",
+          "avsendersMeldingsidentifikator": "26028a72-63b7-470c-ba3b-e5d8c7e42d18",
           "avsendersSaksreferanse": "SAK-2026-KORRIGERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-09-01",
@@ -427,7 +427,7 @@
         "summary": "Opphor av omsorgsansvar",
         "description": "`gyldighetsdato` er datoen omsorgsansvaret opphorer.",
         "value": {
-          "avsendersMeldingsidentifikator": "MSG-2026-OPPHOERE-0001",
+          "avsendersMeldingsidentifikator": "e59c79e6-b515-421b-a5a8-3b04ff2e7eb4",
           "avsendersSaksreferanse": "SAK-2026-OPPHOERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-12-31",
@@ -452,7 +452,7 @@
         "summary": "Annullering av omsorgsansvar",
         "description": "`gyldighetsdato` ma fortsatt sendes fordi feltet er obligatorisk i meldingsformatet, men har ingen praktisk betydning for annullering.",
         "value": {
-          "avsendersMeldingsidentifikator": "MSG-2026-ANNULLERE-0001",
+          "avsendersMeldingsidentifikator": "e5540baf-ca02-4298-b4dc-664f7c6aea73",
           "avsendersSaksreferanse": "SAK-2026-ANNULLERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-09-01",
@@ -477,7 +477,7 @@
         "summary": "Overforing av omsorgsansvar til annen barnevernstjeneste",
         "description": "`gyldighetsdato` er datoen overforingen trer i kraft, og `barnevernstjeneste.ansvarligBarnevernstjeneste` er den nye ansvarlige tjenesten.",
         "value": {
-          "avsendersMeldingsidentifikator": "MSG-2026-OVERFOERE-0001",
+          "avsendersMeldingsidentifikator": "12d3d432-acb2-4917-8c39-91f7686b258a",
           "avsendersSaksreferanse": "SAK-2026-OVERFOERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-10-01",
@@ -583,8 +583,8 @@
         "properties": {
           "avsendersMeldingsidentifikator": {
             "type": "string",
-            "maxLength": 4000,
-            "description": "Klientens unike meldingsid. Brukes som idempotensnokkel (unik per klient/tenant)."
+            "format": "uuid",
+            "description": "Klientens unike meldingsid, som en UUID. Brukes som idempotensnokkel (unik per klient/tenant)."
           },
           "avsendersSaksreferanse": {
             "type": "string",
@@ -677,7 +677,8 @@
             "description": "Tekst-referanse returnert fra Folkeregisterets mottak ved akseptert innsending."
           },
           "avsendersMeldingsidentifikator": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "saksnummer": {
             "type": "string",
@@ -697,7 +698,7 @@
         },
         "example": {
           "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-          "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+          "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
           "status": "MOTTATT",
           "mottattTidspunkt": "2026-09-09T09:12:31Z"
         }
@@ -769,6 +770,7 @@
           },
           "avsendersMeldingsidentifikator": {
             "type": "string",
+            "format": "uuid",
             "description": "Klientens egen meldingsidentifikator for den innsendte meldingen."
           },
           "avsendersSaksreferanse": {
@@ -816,7 +818,7 @@
           "sekvensnummer": 182734,
           "saksnummer": "2026-000123",
           "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-          "avsendersMeldingsidentifikator": "MSG-2026-ENDRE-0001",
+          "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
           "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
           "status": "REGISTRERT",
           "resultatkode": "skalEndre",
