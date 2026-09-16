@@ -584,7 +584,7 @@
           "avsendersMeldingsidentifikator": {
             "type": "string",
             "format": "uuid",
-            "description": "Klientens unike meldingsid, som en UUID. Brukes som idempotensnokkel (unik per klient/tenant)."
+            "description": "Klientens unike meldingsid. Brukes som idempotensnokkel og ma vaere globalt unik. UUID-formatet er et krav i Fiks-API-et, ikke fra Skatteetatens backend (XSD-en typer feltet som fritekst)."
           },
           "avsendersSaksreferanse": {
             "type": "string",
@@ -678,7 +678,8 @@
           },
           "avsendersMeldingsidentifikator": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Klientens meldingsid slik den ble sendt inn."
           },
           "saksnummer": {
             "type": "string",
@@ -773,6 +774,7 @@
             "format": "uuid",
             "description": "Klientens egen meldingsidentifikator for den innsendte meldingen."
           },
+
           "avsendersSaksreferanse": {
             "type": "string",
             "description": "Klientens egen saksreferanse slik den ble sendt inn. Fiks-plattformen fjerner klientprefikset som legges pa mot Folkeregisteret, slik at verdien her er identisk med den klienten sendte."

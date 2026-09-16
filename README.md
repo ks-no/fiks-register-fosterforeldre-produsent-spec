@@ -55,7 +55,7 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 
 ### Viktige regler
 
-- `avsendersMeldingsidentifikator` er klientens idempotensnøkkel, må være en UUID og må være unik.
+- `avsendersMeldingsidentifikator` er klientens idempotensnøkkel og må være unik. Fiks-API-et krever UUID-format; dette er en innsnevring i selve API-et og ikke et krav fra Skatteetaten (XSD-en typer feltet som fritekst uten formatkrav). Videresendes til Folkeregisteret som ren tekst.
 - `kildesystem` - navn på fagsystem, fritekst. "Visma flyt barnevern", "Netcompany modulus barn"
 - `avsendersSaksreferanse` er obligatorisk. Verdien trenger **ikke** være unik på tvers av klienter: KS Digital prefikser den med en klientidentifikator før meldingen videreformidles til Folkeregisteret, slik at referansen blir globalt unik der. Prefikset fjernes igjen før tilbakemeldinger returneres, så klienten får alltid tilbake nøyaktig den verdien den selv sendte inn. Klienten skal derfor ikke selv legge på noe prefiks, og skal matche på sin egen opprinnelige verdi.
 - `foedselsEllerDNummer` må være 11 siffer.
