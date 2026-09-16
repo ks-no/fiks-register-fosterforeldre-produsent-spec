@@ -76,8 +76,8 @@ Disse feltene settes internt av løsningen:
 - `forespoerseltype` utledes av valgt endepunkt.
 - `innsender[].innsendertype` settes til `barnevernstjenesten`.
 - `mottak.informasjonskanal` settes til `elektroniskMelding`.
-- `avsendersInnsendingstidspunkt` settes til tidspunktet meldingen sendes fra Fiks til Skatteetaten.
 - `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet Fiks mottar requesten fra klienten.
+- `avsendersInnsendingstidspunkt` settes til tidspunktet meldingen sendes fra Fiks til Skatteetaten.
 
 ## Betydningen av `gyldighetsdato`
 
