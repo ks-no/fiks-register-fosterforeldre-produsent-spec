@@ -37,7 +37,7 @@
           "Innsending"
         ],
         "summary": "Send melding om endring",
-        "description": "Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=endre`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=endre`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnEndring",
         "requestBody": {
           "required": true,
@@ -76,7 +76,7 @@
           "Innsending"
         ],
         "summary": "Send melding om korrigering",
-        "description": "Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=korrigere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=korrigere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnKorrigering",
         "requestBody": {
           "required": true,
@@ -115,7 +115,7 @@
           "Innsending"
         ],
         "summary": "Send melding om opphor",
-        "description": "Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=opphoere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=opphoere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnOpphoer",
         "requestBody": {
           "required": true,
@@ -154,7 +154,7 @@
           "Innsending"
         ],
         "summary": "Send melding om annullering",
-        "description": "Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=annullere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=annullere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnAnnullering",
         "requestBody": {
           "required": true,
@@ -193,7 +193,7 @@
           "Innsending"
         ],
         "summary": "Send melding om overforing",
-        "description": "Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=overfoere`, `innsender[].innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=overfoere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
         "operationId": "sendInnOverfoering",
         "requestBody": {
           "required": true,
@@ -377,24 +377,21 @@
         "summary": "Endring av omsorgsansvar",
         "description": "`gyldighetsdato` er datoen omsorgsansvaret gjelder fra.",
         "value": {
-          "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
-          "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
+          "avsendersMeldingsidentifikator": "98f00932-8dda-4470-9ad9-9e8107a3d9e7",
+          "avsendersSaksreferanse": "SAK-1111",
           "kildesystem": "Visma Flyt Barnevern",
-          "gyldighetsdato": "2026-09-01",
-          "innsender": [
-            {
-              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-              "barnevernstjeneste": "123456789"
-            }
-          ],
-          "barn": {
-            "foedselsEllerDNummer": "01010112345"
-          },
-          "forelder": {
-            "foedselsEllerDNummer": "02020223456"
+          "gyldighetsdato": "2026-08-01",
+          "innsender": {
+            "barnevernstjeneste": "981507320"
           },
           "barnevernstjeneste": {
-            "ansvarligBarnevernstjeneste": "111222333"
+            "ansvarligBarnevernstjeneste": "981507320"
+          },
+          "fosterbarn": {
+            "foedselsEllerDNummer": "06821099739"
+          },
+          "fosterforelder": {
+            "foedselsEllerDNummer": "17908599950"
           }
         }
       },
@@ -406,20 +403,17 @@
           "avsendersSaksreferanse": "SAK-2026-KORRIGERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-09-01",
-          "innsender": [
-            {
-              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-              "barnevernstjeneste": "123456789"
-            }
-          ],
-          "barn": {
-            "foedselsEllerDNummer": "01010112345"
-          },
-          "forelder": {
-            "foedselsEllerDNummer": "02020223456"
+          "innsender": {
+            "barnevernstjeneste": "123456789"
           },
           "barnevernstjeneste": {
             "ansvarligBarnevernstjeneste": "111222333"
+          },
+          "fosterbarn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "fosterforelder": {
+            "foedselsEllerDNummer": "02020223456"
           }
         }
       },
@@ -431,20 +425,17 @@
           "avsendersSaksreferanse": "SAK-2026-OPPHOERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-12-31",
-          "innsender": [
-            {
-              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-              "barnevernstjeneste": "123456789"
-            }
-          ],
-          "barn": {
-            "foedselsEllerDNummer": "01010112345"
-          },
-          "forelder": {
-            "foedselsEllerDNummer": "02020223456"
+          "innsender": {
+            "barnevernstjeneste": "123456789"
           },
           "barnevernstjeneste": {
             "ansvarligBarnevernstjeneste": "111222333"
+          },
+          "fosterbarn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "fosterforelder": {
+            "foedselsEllerDNummer": "02020223456"
           }
         }
       },
@@ -456,20 +447,17 @@
           "avsendersSaksreferanse": "SAK-2026-ANNULLERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-09-01",
-          "innsender": [
-            {
-              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-              "barnevernstjeneste": "123456789"
-            }
-          ],
-          "barn": {
-            "foedselsEllerDNummer": "01010112345"
-          },
-          "forelder": {
-            "foedselsEllerDNummer": "02020223456"
+          "innsender": {
+            "barnevernstjeneste": "123456789"
           },
           "barnevernstjeneste": {
             "ansvarligBarnevernstjeneste": "111222333"
+          },
+          "fosterbarn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "fosterforelder": {
+            "foedselsEllerDNummer": "02020223456"
           }
         }
       },
@@ -481,20 +469,17 @@
           "avsendersSaksreferanse": "SAK-2026-OVERFOERE-0001",
           "kildesystem": "Visma Flyt Barnevern",
           "gyldighetsdato": "2026-10-01",
-          "innsender": [
-            {
-              "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-              "barnevernstjeneste": "123456789"
-            }
-          ],
-          "barn": {
-            "foedselsEllerDNummer": "01010112345"
-          },
-          "forelder": {
-            "foedselsEllerDNummer": "02020223456"
+          "innsender": {
+            "barnevernstjeneste": "123456789"
           },
           "barnevernstjeneste": {
             "ansvarligBarnevernstjeneste": "444555666"
+          },
+          "fosterbarn": {
+            "foedselsEllerDNummer": "01010112345"
+          },
+          "fosterforelder": {
+            "foedselsEllerDNummer": "02020223456"
           }
         }
       }
@@ -523,10 +508,10 @@
                 "value": {
                   "kode": "valideringsfeil",
                   "backendFeilkode": "ske.folkeregister.mottak.infrastructure.exceptions.ValideringsFeil",
-                  "melding": "Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
+                  "melding": "Feltet 'fosterbarn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
                   "httpStatus": 400,
                   "alvorlighetsgrad": "WARNING",
-                  "tilleggsinformasjon": "felt=barn.foedselsEllerDNummer, regel=^[0-9]{11}$",
+                  "tilleggsinformasjon": "felt=fosterbarn.foedselsEllerDNummer, regel=^[0-9]{11}$",
                   "korrelasjonsid": "56a8ad5a81ec4cf4aa4f790507cd66a0"
                 }
               }
@@ -569,15 +554,15 @@
       },
       "OmsorgsansvarEndringRequest": {
         "type": "object",
-        "description": "Offentlig requestmodell. Folgende felter fra Skatteetatens backend-melding (XSD) eksponeres ikke i API-et, men settes internt ved videreformidling:\n- `forespoerseltype`: utledes av valgt endepunkt:\n  `/omsorgsansvar/endre` -> `endre`, `/omsorgsansvar/korrigere` -> `korrigere`, `/omsorgsansvar/opphoere` -> `opphoere`, `/omsorgsansvar/annullere` -> `annullere`, `/omsorgsansvar/overfoere` -> `overfoere`.\n- `innsender[].innsendertype`: settes til `barnevernstjenesten`.\n- `mottak.informasjonskanal`: settes til `elektroniskMelding`.\n- `mottak.mottakstidspunktFraOpprinneligKanal`: settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten ved videreformidling til Skatt.",
+        "description": "Offentlig requestmodell. Folgende felter fra Skatteetatens backend-melding (XSD) eksponeres ikke i API-et, men settes internt ved videreformidling:\n- `forespoerseltype`: utledes av valgt endepunkt:\n  `/omsorgsansvar/endre` -> `endre`, `/omsorgsansvar/korrigere` -> `korrigere`, `/omsorgsansvar/opphoere` -> `opphoere`, `/omsorgsansvar/annullere` -> `annullere`, `/omsorgsansvar/overfoere` -> `overfoere`.\n- `innsender.innsendertype`: settes til `barnevernstjenesten`.\n- `mottak.informasjonskanal`: settes til `elektroniskMelding`.\n- `mottak.mottakstidspunktFraOpprinneligKanal`: settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten ved videreformidling til Skatt.",
         "required": [
           "avsendersMeldingsidentifikator",
           "avsendersSaksreferanse",
           "kildesystem",
           "gyldighetsdato",
           "innsender",
-          "barn",
-          "forelder",
+          "fosterbarn",
+          "fosterforelder",
           "barnevernstjeneste"
         ],
         "properties": {
@@ -602,38 +587,30 @@
             "description": "Operasjonsspesifikk dato: gyldig fra, opphor, eller overforingstidspunkt avhengig av endepunkt."
           },
           "innsender": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "$ref": "#/components/schemas/Innsender"
-            },
-            "description": "En eller flere innsendere."
-          },
-          "barn": {
-            "$ref": "#/components/schemas/Personidentifikator"
-          },
-          "forelder": {
-            "$ref": "#/components/schemas/Personidentifikator"
+            "$ref": "#/components/schemas/Innsender"
           },
           "barnevernstjeneste": {
             "$ref": "#/components/schemas/Barnevernstjeneste"
+          },
+          "fosterbarn": {
+            "$ref": "#/components/schemas/Personidentifikator"
+          },
+          "fosterforelder": {
+            "$ref": "#/components/schemas/Personidentifikator"
           }
         }
       },
       "Innsender": {
         "type": "object",
+        "description": "Barnevernstjenesten som sender inn meldingen.",
         "required": [
-          "navnPaaBarnevernstjenesten",
           "barnevernstjeneste"
         ],
         "properties": {
-          "navnPaaBarnevernstjenesten": {
-            "type": "string",
-            "maxLength": 175
-          },
           "barnevernstjeneste": {
             "type": "string",
-            "pattern": "^[0-9]{9}$"
+            "pattern": "^[0-9]{9}$",
+            "description": "Organisasjonsnummer for barnevernstjenesten som sender meldingen."
           }
         }
       },
@@ -699,7 +676,7 @@
         },
         "example": {
           "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-          "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
+          "avsendersMeldingsidentifikator": "98f00932-8dda-4470-9ad9-9e8107a3d9e7",
           "status": "MOTTATT",
           "mottattTidspunkt": "2026-09-09T09:12:31Z"
         }
@@ -774,7 +751,6 @@
             "format": "uuid",
             "description": "Klientens egen meldingsidentifikator for den innsendte meldingen."
           },
-
           "avsendersSaksreferanse": {
             "type": "string",
             "description": "Klientens egen saksreferanse slik den ble sendt inn. Fiks-plattformen fjerner klientprefikset som legges pa mot Folkeregisteret, slik at verdien her er identisk med den klienten sendte."
@@ -820,8 +796,8 @@
           "sekvensnummer": 182734,
           "saksnummer": "2026-000123",
           "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-          "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
-          "avsendersSaksreferanse": "SAK-2026-ENDRE-0001",
+          "avsendersMeldingsidentifikator": "98f00932-8dda-4470-9ad9-9e8107a3d9e7",
+          "avsendersSaksreferanse": "SAK-1111",
           "status": "REGISTRERT",
           "resultatkode": "skalEndre",
           "resultatbeskrivelse": "Omsorgsansvar skal endres",
@@ -874,7 +850,7 @@
           },
           "melding": {
             "type": "string",
-            "example": "Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$"
+            "example": "Feltet 'fosterbarn.foedselsEllerDNummer' ma matche ^[0-9]{11}$"
           },
           "httpStatus": {
             "type": "integer",
@@ -899,10 +875,10 @@
         "example": {
           "kode": "valideringsfeil",
           "backendFeilkode": "ske.folkeregister.mottak.infrastructure.exceptions.ValideringsFeil",
-          "melding": "Feltet 'barn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
+          "melding": "Feltet 'fosterbarn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
           "httpStatus": 400,
           "alvorlighetsgrad": "WARNING",
-          "tilleggsinformasjon": "felt=barn.foedselsEllerDNummer, regel=^[0-9]{11}$",
+          "tilleggsinformasjon": "felt=fosterbarn.foedselsEllerDNummer, regel=^[0-9]{11}$",
           "korrelasjonsid": "56a8ad5a81ec4cf4aa4f790507cd66a0"
         }
       }

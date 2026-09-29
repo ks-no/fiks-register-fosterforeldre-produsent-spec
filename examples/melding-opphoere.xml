@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<meldingOmEndringAvOmsorgsansvar xmlns="folkeregisteret:melding:meldingomendringavomsorgsansvar:v1">
+<meldingOmOmsorgsansvar xmlns="folkeregisteret:melding:meldingomomsorgsansvar:v0.3">
     <innsending>
         <avsendersMeldingsidentifikator>MSG-2026-OPPHOERE-0001</avsendersMeldingsidentifikator>
         <avsendersInnsendingstidspunkt>2026-09-07T11:32:00+02:00</avsendersInnsendingstidspunkt>
@@ -13,23 +13,20 @@
         <gyldighetsdato>2026-09-01</gyldighetsdato>
         <innsender>
             <innsendertype>barnevernstjenesten</innsendertype>
-            <navnPaaBarnevernstjenesten>Stavanger barnevernstjeneste</navnPaaBarnevernstjenesten>
             <barnevernstjeneste>123456789</barnevernstjeneste>
         </innsender>
         <mottak>
             <mottakstidspunktFraOpprinneligKanal>2026-09-07</mottakstidspunktFraOpprinneligKanal>
             <informasjonskanal>elektroniskMelding</informasjonskanal>
         </mottak>
-        <barn>
+        <fosterbarn>
             <foedselsEllerDNummer>05050556789</foedselsEllerDNummer>
-        </barn>
-        <forelder>
+        </fosterbarn>
+        <fosterforelder>
             <foedselsEllerDNummer>06060667890</foedselsEllerDNummer>
-        </forelder>
+        </fosterforelder>
         <barnevernstjeneste>
             <ansvarligBarnevernstjeneste>333444555</ansvarligBarnevernstjeneste>
         </barnevernstjeneste>
     </forespoersel>
-</meldingOmEndringAvOmsorgsansvar>
-
-
+</meldingOmOmsorgsansvar>

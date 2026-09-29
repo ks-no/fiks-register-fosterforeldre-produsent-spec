@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-SCHEMA="${REPO_ROOT}/meldinger/MeldingOmEndringAvOmsorgsansvar_v1.0.xsd"
+SCHEMA="${REPO_ROOT}/meldinger/MeldingOmOmsorgsansvar_v0.3.xsd"
 
 if ! command -v xmllint >/dev/null 2>&1; then
   echo "Error: xmllint is not installed." >&2
@@ -29,4 +29,3 @@ for xml in "${xml_files[@]}"; do
 done
 
 echo "All example XML files validated successfully."
-

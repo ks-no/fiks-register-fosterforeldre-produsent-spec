@@ -48,9 +48,9 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 - `avsendersSaksreferanse`
 - `kildesystem`
 - `gyldighetsdato`
-- `innsender[]` TODO: blir kun en 
-- `barn.foedselsEllerDNummer`
-- `forelder.foedselsEllerDNummer`
+- `innsender.barnevernstjeneste`
+- `fosterbarn.foedselsEllerDNummer`
+- `fosterforelder.foedselsEllerDNummer`
 - `barnevernstjeneste.ansvarligBarnevernstjeneste`
 
 ### Viktige regler
@@ -67,14 +67,14 @@ Alle fem operasjoner bruker samme offentlige JSON-struktur:
 Følgende felter finnes i Skatteetatens bakgrunnsformat, men inngår ikke i det offentlige API-et:
 
 - `forespoerseltype` - utledes fra url
-- `innsender[].innsendertype`
+- `innsender.innsendertype`
 - `mottak`
 - `avsendersInnsendingstidspunkt`
 
 Disse feltene settes internt av løsningen:
 
 - `forespoerseltype` utledes av valgt endepunkt.
-- `innsender[].innsendertype` settes til `barnevernstjenesten`.
+- `innsender.innsendertype` settes til `barnevernstjenesten`.
 - `mottak.informasjonskanal` settes til `elektroniskMelding`.
 - `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet Fiks mottar requesten fra klienten.
 - `avsendersInnsendingstidspunkt` settes til tidspunktet meldingen sendes fra Fiks til Skatteetaten.
@@ -96,30 +96,29 @@ Samme felt brukes i alle operasjoner, men med ulik betydning:
 ### 1. Send inn melding
 
 Eksempel: registrere nytt omsorgsansvar.
+Payloaden under er JSON-versjonen av `endre`-eksempelet i
+[`meldinger/eksempler.md`](meldinger/eksempler.md).
 
 ```bash
 curl -X POST 'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/omsorgsansvar/endre' \
   -H 'Authorization: Bearer <token>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
-    "avsendersSaksreferanse": "SAK-2026-0001",
+    "avsendersMeldingsidentifikator": "98f00932-8dda-4470-9ad9-9e8107a3d9e7",
+    "avsendersSaksreferanse": "SAK-1111",
     "kildesystem": "Visma Flyt Barnevern",
-    "gyldighetsdato": "2026-09-01",
-    "innsender": [
-      {
-        "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-        "barnevernstjeneste": "123456789"
-      }
-    ],
-    "barn": {
-      "foedselsEllerDNummer": "01010112345"
+    "gyldighetsdato": "2026-08-01",
+    "innsender": {
+      "barnevernstjeneste": "981507320"
     },
-    "forelder": {
-      "foedselsEllerDNummer": "02020223456"
+    "fosterbarn": {
+      "foedselsEllerDNummer": "06821099739"
+    },
+    "fosterforelder": {
+      "foedselsEllerDNummer": "17908599950"
     },
     "barnevernstjeneste": {
-      "ansvarligBarnevernstjeneste": "111222333"
+      "ansvarligBarnevernstjeneste": "981507320"
     }
   }'
 ```
@@ -129,7 +128,7 @@ Typisk respons:
 ```json
 {
   "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-  "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
+  "avsendersMeldingsidentifikator": "98f00932-8dda-4470-9ad9-9e8107a3d9e7",
   "status": "MOTTATT",
   "mottattTidspunkt": "2026-09-09T09:12:31Z"
 }
@@ -172,8 +171,8 @@ Eksempelrespons:
       "sekvensnummer": 182734,
       "saksnummer": "2026-000123",
       "folkeregisterReferanse": "47956f5b-fa1e-447d-a62d-b6714bc1f120",
-      "avsendersMeldingsidentifikator": "93c2ac1b-cc37-4a04-a282-cbc918378f47",
-      "avsendersSaksreferanse": "SAK-2026-0001",
+      "avsendersMeldingsidentifikator": "98f00932-8dda-4470-9ad9-9e8107a3d9e7",
+      "avsendersSaksreferanse": "SAK-1111",
       "status": "REGISTRERT",
       "resultatkode": "skalEndre",
       "resultatbeskrivelse": "Omsorgsansvar skal endres",
@@ -238,7 +237,7 @@ Eksempel:
 
 ```bash
 curl -H 'Authorization: Bearer <token>' \
-  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger/meldinger/93c2ac1b-cc37-4a04-a282-cbc918378f47'
+  'https://api.test.fiks.ks.no/folkeregister/produsent/api/v1/tilbakemeldinger/meldinger/98f00932-8dda-4470-9ad9-9e8107a3d9e7'
 ```
 
 ## Fornuftige brukseksempler
@@ -292,16 +291,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
   "avsendersSaksreferanse": "SAK-2026-1001",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-      "barnevernstjeneste": "123456789"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "123456789"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "01010112345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "02020223456"
   },
   "barnevernstjeneste": {
@@ -325,16 +321,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
   "avsendersSaksreferanse": "SAK-2026-1001",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Oslo barnevernstjeneste",
-      "barnevernstjeneste": "123456789"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "123456789"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "01010112345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "03030334567"
   },
   "barnevernstjeneste": {
@@ -362,16 +355,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   "avsendersSaksreferanse": "SAK-2026-1002",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Bergen barnevernstjeneste",
-      "barnevernstjeneste": "234567891"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "234567891"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "11111112345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "12121223456"
   },
   "barnevernstjeneste": {
@@ -390,16 +380,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
   "avsendersSaksreferanse": "SAK-2026-1002",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Bergen barnevernstjeneste",
-      "barnevernstjeneste": "234567891"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "234567891"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "11111112345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "99999999999"
   },
   "barnevernstjeneste": {
@@ -423,16 +410,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   "avsendersSaksreferanse": "SAK-2026-1003",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-08-15",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Trondheim barnevernstjeneste",
-      "barnevernstjeneste": "345678912"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "345678912"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "13131312345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "14141423456"
   },
   "barnevernstjeneste": {
@@ -459,16 +443,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
   "avsendersSaksreferanse": "SAK-2026-1004",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-10-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Drammen barnevernstjeneste",
-      "barnevernstjeneste": "456789123"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "456789123"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "15151512345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "16161623456"
   },
   "barnevernstjeneste": {
@@ -496,16 +477,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/opphoere`
   "avsendersSaksreferanse": "SAK-2026-1005",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-30",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Kristiansand barnevernstjeneste",
-      "barnevernstjeneste": "567891234"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "567891234"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "17171712345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "18181823456"
   },
   "barnevernstjeneste": {
@@ -524,16 +502,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/endre`
   "avsendersSaksreferanse": "SAK-2026-1005",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-10-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Kristiansand barnevernstjeneste",
-      "barnevernstjeneste": "567891234"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "567891234"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "17171712345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "19191934567"
   },
   "barnevernstjeneste": {
@@ -557,16 +532,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/overfoere`
   "avsendersSaksreferanse": "SAK-2026-1006",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-11-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Asker barnevernstjeneste",
-      "barnevernstjeneste": "678912345"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "678912345"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "20202012345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "21212123456"
   },
   "barnevernstjeneste": {
@@ -593,16 +565,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/annullere`
   "avsendersSaksreferanse": "SAK-2026-1007",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Stavanger barnevernstjeneste",
-      "barnevernstjeneste": "789123456"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "789123456"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "22222212345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "23232323456"
   },
   "barnevernstjeneste": {
@@ -629,16 +598,13 @@ Endepunkt: `POST /api/v1/omsorgsansvar/korrigere`
   "avsendersSaksreferanse": "SAK-2026-1008-KORR",
   "kildesystem": "Visma Flyt Barnevern",
   "gyldighetsdato": "2026-09-01",
-  "innsender": [
-    {
-      "navnPaaBarnevernstjenesten": "Tromso barnevernstjeneste",
-      "barnevernstjeneste": "891234567"
-    }
-  ],
-  "barn": {
+  "innsender": {
+    "barnevernstjeneste": "891234567"
+  },
+  "fosterbarn": {
     "foedselsEllerDNummer": "24242412345"
   },
-  "forelder": {
+  "fosterforelder": {
     "foedselsEllerDNummer": "25252523456"
   },
   "barnevernstjeneste": {

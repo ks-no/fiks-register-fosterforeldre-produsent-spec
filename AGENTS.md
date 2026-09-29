@@ -7,9 +7,9 @@ Arbeidsregler for dette repoet. Selve API-et er dokumentert i `README.md` og
 
 - Canonical OpenAPI: `register-fosterforeldre-produsent.json`
 - Klientdokumentasjon: `README.md`
-- XSD: `meldinger/MeldingOmEndringAvOmsorgsansvar_v1.0.xsd`
-- Faglig beskrivelse: `meldinger/Melding om endring av omsorgsansvar august 2026.pdf`
-- Eksempler: `examples/*.xml`
+- XSD: `meldinger/MeldingOmOmsorgsansvar_v0.3.xsd`
+- Faglig beskrivelse: `meldinger/Melding om endring av omsorgsansvar Sept. 2026.pdf`
+- Eksempler: `meldinger/eksempler.md` and validated XML files in `examples/*.xml`
 - Backend: https://skatteetaten.github.io/folkeregisteret-api-dokumentasjon/ (`mottak/` og `tilbakemelding/`)
 
 ## Regler
@@ -38,6 +38,4 @@ Forventet: «valid» med kun advarselen `info-license`.
 - Om meldingstypen kan ende i `sakTilManuellBehandling`. I sa fall mangler `saksfrist`, og `status`/`beslutningstidspunkt` kan ikke vaere `required`.
 - Casing pa `beslutning` fra backend (feeden bruker sma bokstaver, specen store).
 - Om backend stotter `pageSize` over 100. Specen tillater `antall` opp til 1000.
-- `forelder.foedselsEllerDNummer` er merket "Ja*" i PDF uten funnet fotnote.
 - Hvilken backend-ressurssti mottak bruker for omsorgsansvar.
-- Om `gyldighetsdato` faktisk er uten betydning ved `annullere` (pastanden er ikke verifisert mot PDF).

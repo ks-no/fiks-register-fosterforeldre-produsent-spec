@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<meldingOmEndringAvOmsorgsansvar xmlns="folkeregisteret:melding:meldingomendringavomsorgsansvar:v1">
+<meldingOmOmsorgsansvar xmlns="folkeregisteret:melding:meldingomomsorgsansvar:v0.3">
     <innsending>
         <avsendersMeldingsidentifikator>MSG-2026-ANNULLERE-0001</avsendersMeldingsidentifikator>
         <avsendersInnsendingstidspunkt>2026-09-07T11:33:00+02:00</avsendersInnsendingstidspunkt>
@@ -13,23 +13,20 @@
         <gyldighetsdato>2026-09-01</gyldighetsdato>
         <innsender>
             <innsendertype>barnevernstjenesten</innsendertype>
-            <navnPaaBarnevernstjenesten>Tromso barnevernstjeneste</navnPaaBarnevernstjenesten>
             <barnevernstjeneste>123456789</barnevernstjeneste>
         </innsender>
         <mottak>
             <mottakstidspunktFraOpprinneligKanal>2026-09-07</mottakstidspunktFraOpprinneligKanal>
             <informasjonskanal>elektroniskMelding</informasjonskanal>
         </mottak>
-        <barn>
+        <fosterbarn>
             <foedselsEllerDNummer>07070778901</foedselsEllerDNummer>
-        </barn>
-        <forelder>
+        </fosterbarn>
+        <fosterforelder>
             <foedselsEllerDNummer>08080889012</foedselsEllerDNummer>
-        </forelder>
+        </fosterforelder>
         <barnevernstjeneste>
             <ansvarligBarnevernstjeneste>444555666</ansvarligBarnevernstjeneste>
         </barnevernstjeneste>
     </forespoersel>
-</meldingOmEndringAvOmsorgsansvar>
-
-
+</meldingOmOmsorgsansvar>
