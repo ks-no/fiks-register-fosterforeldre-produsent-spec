@@ -1,12 +1,13 @@
 # AGENTS.md
 
-Arbeidsregler for dette repoet. Selve API-et er dokumentert i `README.md` og
-`register-fosterforeldre-produsent.json` - ikke dupliser innholdet her.
+Arbeidsregler for dette repoet. Selve API-et er dokumentert i `register-fosterforeldre-produsent.json` og i
+klientdokumentasjonen på developers.fiks.ks.no - ikke dupliser innholdet her.
 
 ## Kilder
 
 - Canonical OpenAPI: `register-fosterforeldre-produsent.json`
-- Klientdokumentasjon: `README.md`
+- Klientdokumentasjon: https://developers.fiks.ks.no/tjenester/register/fosterforeldre-omsorgsansvar/
+  (kilde: `content/Tjenester/register/fosterforeldre-omsorgsansvar/` i `ks-no/ks-no.github.io`)
 - XSD: `meldinger/MeldingOmOmsorgsansvar_v0.3.xsd`
 - Faglig beskrivelse: `meldinger/Melding om endring av omsorgsansvar Sept. 2026.pdf`
 - Eksempler: `meldinger/eksempler.md` and validated XML files in `examples/*.xml`
@@ -18,10 +19,12 @@ Arbeidsregler for dette repoet. Selve API-et er dokumentert i `README.md` og
 - Enum-verdier beholder kildens skrivemate.
 - Bruk norske feltnavn og verdier i payload der XSD/PDF bruker norsk. Response-komponentnavn i OpenAPI kan vaere engelske (`Accepted`, `BadRequest`).
 - Ikke legg inn `info.license`.
+- Specen er leverandørrettet: ikke nevn Skatteetaten, XSD, interne felter (f.eks. `forespoerseltype`), backend-feilkoder eller intern hendelsesstrøm i beskrivelser eller eksempler.
+- Kodelister som kan utvides (`resultatkode`, `begrunnelseskode`) modelleres som `string` med `x-extensible-enum`, ikke `enum`.
 
 ## Endringsrutine
 
-1. Oppdater specen og `README.md` i samme endring.
+1. Oppdater specen, og oppdater klientdokumentasjonen i `ks-no.github.io` ved endringer som påvirker klienter.
 2. Lint:
 
 ```bash
