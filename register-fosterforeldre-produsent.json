@@ -3,7 +3,7 @@
   "info": {
     "title": "Fosterforeldre Omsorgsansvar Innsending API",
     "version": "v1",
-    "description": "Brukervennlig API for innsending av meldinger om endring av omsorgsansvar, med asynkron tilbakemelding via polling. Payloaden er domenetilpasset og skjuler intern XML/XSD-struktur. Innsending bruker `application/json`.\n\nForesporselstyper:\n- Endre: Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist.\n- Opphoere: Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene.\n- Korrigere: Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen.\n- Annullere: Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig.\n- Overfoere: Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen."
+    "description": "Brukervennlig API for innsending av meldinger om endring av omsorgsansvar, med asynkron tilbakemelding via polling. Innsending bruker `application/json`.\n\nForesporselstyper:\n- Endre: Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist.\n- Opphoere: Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene.\n- Korrigere: Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen.\n- Annullere: Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig.\n- Overfoere: Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen."
   },
   "servers": [
     {
@@ -37,7 +37,7 @@
           "Innsending"
         ],
         "summary": "Send melding om endring",
-        "description": "Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=endre`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Registrere ny oppforing med informasjon og tilhorende metadata i Folkeregisteret. Dersom verdi finnes fra for, blir denne meldingen avvist.",
         "operationId": "sendInnEndring",
         "requestBody": {
           "required": true,
@@ -76,7 +76,7 @@
           "Innsending"
         ],
         "summary": "Send melding om korrigering",
-        "description": "Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=korrigere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Bytte ut informasjon eller metadata pa en eksisterende oppforing i Folkeregisteret. Hele oppforingen far nytt ajourholdstidspunkt tilsvarende tidspunktet for korrigeringen.",
         "operationId": "sendInnKorrigering",
         "requestBody": {
           "required": true,
@@ -115,7 +115,7 @@
           "Innsending"
         ],
         "summary": "Send melding om opphor",
-        "description": "Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=opphoere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Avslutte gyldighetsperioden for en oppforing i Folkeregisteret ved a sette opphorstidspunktet i de tilhorende metadataene.",
         "operationId": "sendInnOpphoer",
         "requestBody": {
           "required": true,
@@ -154,7 +154,7 @@
           "Innsending"
         ],
         "summary": "Send melding om annullering",
-        "description": "Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=annullere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Fjerne en oppforing med informasjon og tilhorende metadata slik at det ikke lenger vises i Folkeregisteret at informasjonen har vaert registrert. Informasjonen har aldri vaert gyldig.",
         "operationId": "sendInnAnnullering",
         "requestBody": {
           "required": true,
@@ -193,7 +193,7 @@
           "Innsending"
         ],
         "summary": "Send melding om overforing",
-        "description": "Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen. Folgende felter finnes i Skatteetatens meldingsformat, men eksponeres ikke i request-payloaden og settes internt ved videreformidling: `forespoerseltype=overfoere`, `innsender.innsendertype=barnevernstjenesten`, `mottak.informasjonskanal=elektroniskMelding` og `mottak.mottakstidspunktFraOpprinneligKanal` settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten.",
+        "description": "Ansvaret for et fosterbarn overfores fra en barnevernstjeneste til en annen.",
         "operationId": "sendInnOverfoering",
         "requestBody": {
           "required": true,
@@ -232,7 +232,7 @@
           "Tilbakemelding"
         ],
         "summary": "Hent startsekvens for klient",
-        "description": "Returnerer startsekvens for autentisert klient. Sekvensnummeret tildeles av Fiks-plattformen fra en global hendelsesstrom som filtreres per klient. Klienten ser derfor kun sine egne hendelser, og nummerserien er stigende men kan inneholde hull; klienten ma ikke anta at verdiene er fortlopende.\nBruk denne ved oppstart: 1) Kall dette endepunktet. 2) Les `sekvensnummer` i responsen. 3) Kall `GET /api/v1/tilbakemeldinger` med `fraSekvensnummer=<sekvensnummer>`.\nVed videre polling bruker klienten `nesteSekvensnummer` fra forrige poll-respons, ikke `/start` pa nytt.",
+        "description": "Returnerer startsekvens for autentisert klient. Klienten ser kun sine egne hendelser. Serien er stigende, men kan inneholde hull. Klienten ma ikke anta at verdiene er fortlopende. Bruk denne ved oppstart: 1) Kall dette endepunktet. 2) Les `sekvensnummer` i responsen. 3) Kall `GET /api/v1/tilbakemeldinger` med `fraSekvensnummer=<sekvensnummer>`. Ved videre polling bruker klienten `nesteSekvensnummer` fra forrige poll-respons, ikke `/start` pa nytt.",
         "operationId": "hentStartsekvensForTilbakemeldinger",
         "parameters": [
           {
@@ -273,14 +273,14 @@
           "Tilbakemelding"
         ],
         "summary": "Poll tilbakemeldinger",
-        "description": "Henter tilbakemeldinger for autentisert klient fra og med gitt sekvens. Returnerer kun klientens egne meldinger. Sekvensnummeret tildeles av Fiks-plattformen fra en global hendelsesstrom som filtreres per klient, sa serien kan inneholde hull. Klienten ma derfor alltid bruke returnert `nesteSekvensnummer` og ikke beregne neste verdi selv.\nPolling-flyt: 1) Start med sekvens fra `GET /api/v1/tilbakemeldinger/start`. 2) Send `fraSekvensnummer` i dette kallet. 3) Bruk `nesteSekvensnummer` fra responsen i neste kall. 4) Gjenta med jevnt intervall.",
+        "description": "Henter tilbakemeldinger for autentisert klient fra og med gitt sekvens. Returnerer kun klientens egne meldinger. Serien er stigende, men kan inneholde hull. Klienten ma derfor alltid bruke returnert `nesteSekvensnummer` og ikke beregne neste verdi selv. Polling-flyt: 1) Start med sekvens fra `GET /api/v1/tilbakemeldinger/start`. 2) Send `fraSekvensnummer` i dette kallet. 3) Bruk `nesteSekvensnummer` fra responsen i neste kall. 4) Gjenta med jevnt intervall.",
         "operationId": "hentTilbakemeldinger",
         "parameters": [
           {
             "name": "fraSekvensnummer",
             "in": "query",
             "required": false,
-            "description": "Sekvensnummer a starte fra (inkludert). Bruk `sekvensnummer` fra `/tilbakemeldinger/start` ved oppstart, og senere `nesteSekvensnummer` fra forrige poll-respons. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient.",
+            "description": "Sekvensnummer a starte fra (inkludert). Bruk `sekvensnummer` fra `/tilbakemeldinger/start` ved oppstart, og senere `nesteSekvensnummer` fra forrige poll-respons. Serien er stigende, men kan inneholde hull.",
             "schema": {
               "type": "integer",
               "format": "int64",
@@ -327,7 +327,7 @@
           "Tilbakemelding"
         ],
         "summary": "Hent tilbakemelding per klientmeldingsid",
-        "description": "Oppslag pa klientens egen meldingsid, for gjenfinning og verifisering etter en retry. Returnerer siste kjente tilbakemelding for meldingen.\nMerk: Folkeregisteret tilbyr ikke oppslag per melding. Endepunktet betjenes av Fiks-plattformens egen indeks over hendelsesstrommen. En melding er derfor forst soekbar her etter at Fiks har konsumert tilhorende hendelse fra Folkeregisteret; inntil da returneres 404 selv om meldingen er sendt inn. Bruk `GET /api/v1/tilbakemeldinger` som primaerkilde, og dette endepunktet som supplement.",
+        "description": "Oppslag pa klientens egen meldingsid, for gjenfinning og verifisering etter en retry. Returnerer siste kjente tilbakemelding for meldingen.\nMerk: Meldingen er forst soekbar her nar tilbakemeldingen er tilgjengelig fra Folkeregisteret; inntil da returneres 404 selv om meldingen er sendt inn. Bruk `GET /api/v1/tilbakemeldinger` som primaerkilde, og dette endepunktet som supplement.",
         "operationId": "hentTilbakemeldingVedAvsendersMeldingsidentifikator",
         "parameters": [
           {
@@ -507,7 +507,6 @@
                 "summary": "Ugyldig payload eller valideringsfeil",
                 "value": {
                   "kode": "valideringsfeil",
-                  "backendFeilkode": "ske.folkeregister.mottak.infrastructure.exceptions.ValideringsFeil",
                   "melding": "Feltet 'fosterbarn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
                   "httpStatus": 400,
                   "alvorlighetsgrad": "WARNING",
@@ -554,7 +553,7 @@
       },
       "OmsorgsansvarEndringRequest": {
         "type": "object",
-        "description": "Offentlig requestmodell. Folgende felter fra Skatteetatens backend-melding (XSD) eksponeres ikke i API-et, men settes internt ved videreformidling:\n- `forespoerseltype`: utledes av valgt endepunkt:\n  `/omsorgsansvar/endre` -> `endre`, `/omsorgsansvar/korrigere` -> `korrigere`, `/omsorgsansvar/opphoere` -> `opphoere`, `/omsorgsansvar/annullere` -> `annullere`, `/omsorgsansvar/overfoere` -> `overfoere`.\n- `innsender.innsendertype`: settes til `barnevernstjenesten`.\n- `mottak.informasjonskanal`: settes til `elektroniskMelding`.\n- `mottak.mottakstidspunktFraOpprinneligKanal`: settes til tidspunktet da Fiks-plattformen mottar requesten fra klienten ved videreformidling til Skatt.",
+        "description": "Requestmodell for innsending. Operasjonen bestemmes av endepunktet: `endre`, `korrigere`, `opphoere`, `annullere` eller `overfoere`.",
         "required": [
           "avsendersMeldingsidentifikator",
           "avsendersSaksreferanse",
@@ -569,12 +568,12 @@
           "avsendersMeldingsidentifikator": {
             "type": "string",
             "format": "uuid",
-            "description": "Klientens unike meldingsid. Brukes som idempotensnokkel og ma vaere globalt unik. UUID-formatet er et krav i Fiks-API-et, ikke fra Skatteetatens backend (XSD-en typer feltet som fritekst)."
+            "description": "Klientens unike meldingsid (UUID). Brukes som idempotensnokkel og ma vaere globalt unik."
           },
           "avsendersSaksreferanse": {
             "type": "string",
             "maxLength": 4000,
-            "description": "Klientens interne saksreferanse. Obligatorisk. Verdien trenger ikke vaere unik pa tvers av klienter: Fiks-plattformen prefikser den med en klientidentifikator for videreformidling til Folkeregisteret, slik at referansen blir globalt unik. Prefikset fjernes igjen for tilbakemeldinger returneres, slik at klienten alltid ser sin egen opprinnelige verdi."
+            "description": "Klientens interne saksreferanse. Obligatorisk. Verdien trenger ikke vaere unik pa tvers av klienter, og returneres uendret i tilbakemeldinger."
           },
           "kildesystem": {
             "type": "string",
@@ -641,7 +640,7 @@
       },
       "InnsendingKvittering": {
         "type": "object",
-        "description": "Synkron kvittering fra Fiks-mottaket. Tilsvarer Folkeregisterets `<meldingMottatt>`-svar pa selve innsendingen: kun `folkeregisterReferanse` og `avsendersMeldingsidentifikator` er kjent pa dette tidspunktet. `saksnummer` og videre saksbehandlingsstatus blir forst kjent asynkront og ma hentes via polling eller direkte oppslag.",
+        "description": "Synkron kvittering fra Fiks pa selve innsendingen: kun `folkeregisterReferanse` og `avsendersMeldingsidentifikator` er kjent pa dette tidspunktet. `saksnummer` og videre saksbehandlingsstatus blir forst kjent asynkront og ma hentes via polling eller direkte oppslag.",
         "required": [
           "folkeregisterReferanse",
           "avsendersMeldingsidentifikator",
@@ -651,7 +650,7 @@
         "properties": {
           "folkeregisterReferanse": {
             "type": "string",
-            "description": "Tekst-referanse returnert fra Folkeregisterets mottak ved akseptert innsending."
+            "description": "Referanse fra Folkeregisteret ved akseptert innsending."
           },
           "avsendersMeldingsidentifikator": {
             "type": "string",
@@ -667,7 +666,7 @@
             "enum": [
               "MOTTATT"
             ],
-            "description": "Fiks-mottakets egen kvitteringsstatus ved synkron mottak av meldingen, for Folkeregisteret har fattet en beslutning. Endelig utfall (se `Beslutning` i tilbakemeldinger) hentes via polling eller direkte oppslag."
+            "description": "Fiks' kvitteringsstatus ved mottak av meldingen, for Folkeregisteret har fattet en beslutning. Endelig utfall hentes via polling eller direkte oppslag."
           },
           "mottattTidspunkt": {
             "type": "string",
@@ -691,7 +690,7 @@
             "type": "integer",
             "format": "int64",
             "minimum": 0,
-            "description": "Startsekvens for klienten. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient."
+            "description": "Startsekvens for klienten. Serien er stigende, men kan inneholde hull."
           }
         }
       },
@@ -710,7 +709,7 @@
           "nesteSekvensnummer": {
             "type": "integer",
             "format": "int64",
-            "description": "Bruk denne verdien som `fraSekvensnummer` i neste poll-kall. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient."
+            "description": "Bruk denne verdien som `fraSekvensnummer` i neste poll-kall. Serien er stigende, men kan inneholde hull."
           },
           "tilbakemeldinger": {
             "type": "array",
@@ -736,7 +735,7 @@
           "sekvensnummer": {
             "type": "integer",
             "format": "int64",
-            "description": "Sekvensnummer for hendelsen. Serien kan inneholde hull fordi den globale hendelsesstrommen filtreres per klient."
+            "description": "Sekvensnummer for hendelsen. Serien er stigende, men kan inneholde hull."
           },
           "saksnummer": {
             "type": "string",
@@ -753,7 +752,7 @@
           },
           "avsendersSaksreferanse": {
             "type": "string",
-            "description": "Klientens egen saksreferanse slik den ble sendt inn. Fiks-plattformen fjerner klientprefikset som legges pa mot Folkeregisteret, slik at verdien her er identisk med den klienten sendte."
+            "description": "Klientens egen saksreferanse, identisk med verdien klienten sendte inn."
           },
           "status": {
             "type": "string",
@@ -768,7 +767,19 @@
           },
           "resultatkode": {
             "type": "string",
-            "description": "Maskinlesbar kode fra backend/Folkeregisteret. Se README for fullstendig liste over kjente verdier."
+            "description": "Maskinlesbar kode for beslutningen fra Folkeregisteret. Kjente verdier er listet i `x-extensible-enum`; listen er ikke uttommende, og klienten ma handtere ukjente verdier. Se https://developers.fiks.ks.no/tjenester/register/fosterforeldre-omsorgsansvar/tilbakemeldinger/.",
+            "x-extensible-enum": [
+              "skalEndre",
+              "skalIkkeEndre",
+              "skalKorrigere",
+              "skalIkkeKorrigere",
+              "skalOpphøre",
+              "skalIkkeOpphøre",
+              "skalAnnullere",
+              "SkalIkkeAnnullere",
+              "skalOverføres",
+              "skalIkkeOverføres"
+            ]
           },
           "resultatbeskrivelse": {
             "type": "string",
@@ -814,7 +825,22 @@
         "properties": {
           "begrunnelseskode": {
             "type": "string",
-            "description": "Maskinlesbar avvikskode. Se README for fullstendig liste over kjente koder. Listen kan utvides av Skatteetaten."
+            "description": "Maskinlesbar avvikskode. Kjente verdier er listet i `x-extensible-enum`; listen kan utvides, og klienten ma handtere ukjente verdier. Se https://developers.fiks.ks.no/tjenester/register/fosterforeldre-omsorgsansvar/tilbakemeldinger/.",
+            "x-extensible-enum": [
+              "identifikatorForBarnFinnesIkke",
+              "identifikatorForBarnErIkkeGjeldende",
+              "ugyldigBarn",
+              "identifikatorForForelderFinnesIkke",
+              "identifikatorForForelderErIkkeGjeldende",
+              "ugyldigForelder",
+              "vedtaksdatoErFramtidEllerFeil",
+              "gjeldendeOmsorgsansvarFinnesAllerede",
+              "barnetHarFosterforeldre",
+              "finnerIkkeOmsorgsansvarSomKanSlettes",
+              "finnerIkkeOmsorgsansvarSomKanEndres",
+              "gyldighetstidspunktForTidlig",
+              "gyldighetstidspunktForSent"
+            ]
           },
           "begrunnelsesnavn": {
             "type": "string",
@@ -843,11 +869,6 @@
             "example": "valideringsfeil",
             "description": "API-ets overordnede feilkode."
           },
-          "backendFeilkode": {
-            "type": "string",
-            "description": "Feilkode mottatt fra Skatteetaten/Folkeregisteret nar tilgjengelig.",
-            "example": "ske.folkeregister.mottak.infrastructure.exceptions.KonsumentManglerTilgangException"
-          },
           "melding": {
             "type": "string",
             "example": "Feltet 'fosterbarn.foedselsEllerDNummer' ma matche ^[0-9]{11}$"
@@ -855,17 +876,17 @@
           "httpStatus": {
             "type": "integer",
             "format": "int32",
-            "description": "HTTP-statuskode returnert av Skatteetaten nar tilgjengelig.",
+            "description": "HTTP-statuskode for feilen.",
             "example": 403
           },
           "alvorlighetsgrad": {
             "type": "string",
-            "description": "Alvorlighetsgrad fra Skatteetaten nar tilgjengelig.",
+            "description": "Alvorlighetsgrad nar tilgjengelig.",
             "example": "WARNING"
           },
           "tilleggsinformasjon": {
             "type": "string",
-            "description": "Valgfri fritekst med tilleggsdetaljer fra Skatteetaten nar tilgjengelig. Feltet er ustrukturert fritekst i Folkeregisterets feilmelding (`<tilleggsinformasjon>`) og har ikke et fast format."
+            "description": "Valgfri ustrukturert fritekst med tilleggsdetaljer. Har ikke et fast format."
           },
           "korrelasjonsid": {
             "type": "string",
@@ -874,7 +895,6 @@
         },
         "example": {
           "kode": "valideringsfeil",
-          "backendFeilkode": "ske.folkeregister.mottak.infrastructure.exceptions.ValideringsFeil",
           "melding": "Feltet 'fosterbarn.foedselsEllerDNummer' ma matche ^[0-9]{11}$",
           "httpStatus": 400,
           "alvorlighetsgrad": "WARNING",
